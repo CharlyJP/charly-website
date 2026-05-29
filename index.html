@@ -6,7 +6,7 @@
 <title>Charly — AI English Conversation Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,7 +27,7 @@
 
   body {
     font-family: 'DM Sans', sans-serif;
-    background: linear-gradient(160deg, #f8f4ff 0%, #fdf5fb 30%, #fff8f4 60%, #f4f0ff 100%);
+    background: var(--cream);
     color: var(--deep);
     overflow-x: hidden;
   }
@@ -47,15 +47,17 @@
   }
 
   .nav-logo {
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.7rem;
-    font-weight: 800;
-    color: #E85D9B;
-    background: none;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--purple);
     text-decoration: none;
-    letter-spacing: -0.01em;
-    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: 0;
   }
+
+  .nav-logo .dot { color: var(--pink); }
 
   nav a.cta {
     background: var(--purple);
@@ -109,7 +111,7 @@
   }
 
   .hero h1 {
-    
+    font-family: 'Playfair Display', serif;
     font-size: clamp(3rem, 7vw, 6rem);
     font-weight: 500;
     line-height: 1.1;
@@ -240,7 +242,75 @@
     gap: 6px;
   }
 
+  .signal-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+  }
 
+  .signal-bar {
+    width: 3px;
+    background: white;
+    border-radius: 1px;
+  }
+
+  .signal-bar:nth-child(1) { height: 4px; }
+  .signal-bar:nth-child(2) { height: 6px; }
+  .signal-bar:nth-child(3) { height: 9px; }
+  .signal-bar:nth-child(4) { height: 12px; }
+
+  .wifi-icon {
+    width: 15px;
+    height: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2px;
+  }
+
+  .wifi-arc {
+    border: 2px solid white;
+    border-radius: 50%;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .wifi-arc:nth-child(1) { width: 4px; height: 3px; }
+  .wifi-arc:nth-child(2) { width: 8px; height: 5px; }
+  .wifi-arc:nth-child(3) { width: 13px; height: 8px; }
+  .wifi-dot { width: 3px; height: 3px; background: white; border-radius: 50%; }
+
+  .battery-icon {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+  }
+
+  .battery-body {
+    width: 22px;
+    height: 11px;
+    border: 1.5px solid rgba(255,255,255,0.6);
+    border-radius: 3px;
+    position: relative;
+    padding: 2px;
+  }
+
+  .battery-fill {
+    height: 100%;
+    width: 65%;
+    background: white;
+    border-radius: 1px;
+  }
+
+  .battery-tip {
+    width: 2px;
+    height: 5px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 0 1px 1px 0;
+  }
 
   /* Phone screen content */
   .phone-screen-content {
@@ -254,7 +324,7 @@
   }
 
   .phone-charly-logo {
-    
+    font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     font-weight: 600;
     color: white;
@@ -362,7 +432,7 @@
   }
 
   .section-title {
-    
+    font-family: 'Playfair Display', serif;
     font-size: clamp(2rem, 4vw, 3.2rem);
     font-weight: 500;
     line-height: 1.2;
@@ -401,11 +471,16 @@
   }
 
   .how-card:first-child {
-    background: var(--card-bg);
+    grid-column: span 2;
+    background: linear-gradient(135deg, var(--purple) 0%, #6B35B0 60%, #8B2F7A 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 4rem;
   }
 
   .how-number {
-    
+    font-family: 'Playfair Display', serif;
     font-size: 3.5rem;
     font-weight: 400;
     background: linear-gradient(135deg, var(--purple), var(--pink));
@@ -417,14 +492,14 @@
   }
 
   .how-card:first-child .how-number {
-    background: linear-gradient(135deg, var(--purple), var(--pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 5rem;
+    background: none;
+    -webkit-text-fill-color: rgba(255,255,255,0.2);
+    flex-shrink: 0;
   }
 
   .how-card h3 {
-    
+    font-family: 'Playfair Display', serif;
     font-size: 1.4rem;
     font-weight: 500;
     margin-bottom: 0.75rem;
@@ -436,16 +511,8 @@
     color: var(--warm-gray);
   }
 
-  .how-card:first-child p { color: var(--warm-gray); }
-  .how-card:first-child h3 { color: var(--deep); }
-  .how-card:nth-child(2) .how-number,
-  .how-card:nth-child(3) .how-number,
-  .how-card:nth-child(4) .how-number {
-    background: linear-gradient(135deg, var(--purple), var(--pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  .how-card:first-child p { color: rgba(255,255,255,0.65); }
+  .how-card:first-child h3 { color: white; }
 
   /* FOR TEACHERS */
   .teachers-wrapper {
@@ -668,7 +735,7 @@
   }
 
   .footer-logo {
-    
+    font-family: 'Playfair Display', serif;
     font-size: 1.2rem;
     color: var(--purple);
     font-weight: 600;
@@ -740,7 +807,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">Charly</a>
+  <a href="#" class="nav-logo">Charly<span class="dot">.</span></a>
   <a href="mailto:joe@callcharly.io" class="cta">Get in touch</a>
 </nav>
 
@@ -761,29 +828,29 @@
       <div class="dynamic-island"></div>
       <!-- Status Bar -->
       <div class="iphone-status">
-        <div class="iphone-time" id="phone-time">9:41</div>
+        <div class="iphone-time">9:41</div>
         <div class="iphone-status-right">
-          <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
-            <rect x="0" y="8" width="3" height="4" rx="1" fill="white"/>
-            <rect x="4.5" y="5.5" width="3" height="6.5" rx="1" fill="white"/>
-            <rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="white"/>
-            <rect x="13.5" y="0" width="3" height="12" rx="1" fill="white"/>
-          </svg>
-          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
-            <path d="M8 2.5C10.5 2.5 12.7 3.6 14.2 5.3L15.5 4C13.7 2 11 0.8 8 0.8C5 0.8 2.3 2 0.5 4L1.8 5.3C3.3 3.6 5.5 2.5 8 2.5Z" fill="white"/>
-            <path d="M8 5.5C9.7 5.5 11.2 6.2 12.3 7.4L13.6 6.1C12.2 4.7 10.2 3.8 8 3.8C5.8 3.8 3.8 4.7 2.4 6.1L3.7 7.4C4.8 6.2 6.3 5.5 8 5.5Z" fill="white"/>
-            <circle cx="8" cy="10.5" r="1.5" fill="white"/>
-          </svg>
-          <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
-            <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="rgba(255,255,255,0.55)" stroke-width="1"/>
-            <rect x="2" y="2" width="15" height="8" rx="2" fill="white"/>
-            <path d="M23 4.5V7.5C23.8 7.2 24.5 6.5 24.5 6C24.5 5.5 23.8 4.8 23 4.5Z" fill="rgba(255,255,255,0.4)"/>
-          </svg>
+          <div class="signal-bars">
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+          </div>
+          <div class="wifi-icon">
+            <div class="wifi-arc" style="width:13px;height:8px;"></div>
+            <div class="wifi-arc" style="width:8px;height:5px;"></div>
+            <div class="wifi-arc" style="width:4px;height:3px;"></div>
+            <div class="wifi-dot"></div>
+          </div>
+          <div class="battery-icon">
+            <div class="battery-body"><div class="battery-fill"></div></div>
+            <div class="battery-tip"></div>
+          </div>
         </div>
       </div>
       <!-- Screen Content -->
       <div class="phone-screen-content">
-        <div class="phone-charly-logo">Charly</div>
+        <div class="phone-charly-logo">Charly<span class="dot">.</span></div>
         <div class="phone-status-text">Active call</div>
         <div class="wave-bars">
           <div class="wave-bar"></div>
@@ -795,7 +862,7 @@
           <div class="wave-bar"></div>
           <div class="wave-bar"></div>
         </div>
-        <div class="phone-timer" id="call-timer">00:00</div>
+        <div class="phone-timer">02:34</div>
         <div class="end-btn">
           <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
         </div>
@@ -920,19 +987,19 @@
         <div class="convo-bubbles">
           <div>
             <div class="bubble-label" style="color: var(--pink);">Charly</div>
-            <div class="bubble charly">What have you been up to this week?</div>
+            <div class="bubble charly">Hey, how is it going? What have you been up to this week?</div>
           </div>
           <div style="margin-top: 0.5rem;">
             <div class="bubble-label" style="text-align: right; color: var(--warm-gray);">Student</div>
-            <div class="bubble student">Yesterday I go to the cinema with some friends.</div>
+            <div class="bubble student">I go to the market yesterday with my friend.</div>
           </div>
           <div style="margin-top: 0.5rem;">
             <div class="bubble-label" style="color: var(--pink);">Charly</div>
-            <div class="bubble charly">Oh nice, you went to the cinema. What did you see?</div>
+            <div class="bubble charly">Nice, I love a good market. What did you end up buying when you went?</div>
           </div>
           <div style="margin-top: 0.75rem; padding: 0.8rem 1rem; background: rgba(232,93,155,0.07); border-radius: 12px; border-left: 3px solid var(--pink);">
-            <p style="font-size: 0.8rem; color: var(--pink); font-weight: 500; margin-bottom: 0.3rem;">Grammar coaching in action</p>
-            <p style="font-size: 0.8rem; color: var(--warm-gray);">Student said "I go" instead of "I went". Charly used the correct form naturally in its reply, keeping the conversation going.</p>
+            <p style="font-size: 0.8rem; color: var(--pink); font-weight: 500; margin-bottom: 0.3rem;">Grammar coaching</p>
+            <p style="font-size: 0.8rem; color: var(--warm-gray);">"I go" corrected to "went" naturally, woven into Charly's reply without breaking the conversation.</p>
           </div>
         </div>
       </div>
@@ -953,7 +1020,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Charly</div>
+  <div class="footer-logo">Charly<span class="dot">.</span></div>
   <div>&copy; 2025 Charly Pty Ltd</div>
   <a href="https://portal.callcharly.io" style="color: var(--warm-gray); text-decoration: none;">Teacher portal</a>
 </footer>
@@ -966,25 +1033,6 @@
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
   reveals.forEach(el => observer.observe(el));
-
-  function updateTime() {
-    const now = new Date();
-    const h = now.getHours();
-    const m = now.getMinutes().toString().padStart(2,'0');
-    const el = document.getElementById('phone-time');
-    if (el) el.textContent = h + ':' + m;
-  }
-  updateTime();
-  setInterval(updateTime, 10000);
-
-  let callSeconds = 0;
-  setInterval(() => {
-    callSeconds++;
-    const m = Math.floor(callSeconds / 60).toString().padStart(2,'0');
-    const s = (callSeconds % 60).toString().padStart(2,'0');
-    const el = document.getElementById('call-timer');
-    if (el) el.textContent = m + ':' + s;
-  }, 1000);
 </script>
 </body>
 </html>
