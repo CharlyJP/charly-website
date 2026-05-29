@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charly — AI English Conversation Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FAF8F4;
+    --deep: #1A1410;
+    --pink: #E85D9B;
+    --pink-light: #F5C6DE;
+    --pink-dark: #C04880;
+    --purple: #2D1B69;
+    --purple-mid: #4A2E9E;
+    --warm-gray: #6B6460;
+    --border: rgba(26,20,16,0.1);
+    --card-bg: #FFFFFF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: linear-gradient(160deg, #f8f4ff 0%, #fdf5fb 30%, #fff8f4 60%, #f4f0ff 100%);
+    color: var(--deep);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(250,248,244,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #E85D9B;
+    background: none;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    margin-right: auto;
+  }
+
+  nav a.cta {
+    background: var(--purple);
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 100px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  nav a.cta:hover { background: var(--purple-mid); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(45,27,105,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(232,93,155,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 10% 60%, rgba(45,27,105,0.08) 0%, transparent 60%);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(45,27,105,0.1), rgba(232,93,155,0.1));
+    color: var(--purple);
+    border: 1px solid rgba(45,27,105,0.2);
+    border-radius: 100px;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+
+  .hero h1 {
+    
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s forwards;
+    background: linear-gradient(135deg, var(--purple) 0%, #6B35B0 50%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero h1 .normal {
+    background: linear-gradient(135deg, var(--deep) 0%, #3d2a5e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    max-width: 560px;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--warm-gray);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--purple) 0%, #6B35B0 60%, var(--pink-dark) 100%);
+    color: white;
+    padding: 0.9rem 2.2rem;
+    border-radius: 100px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(45,27,105,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(45,27,105,0.4);
+  }
+
+  .btn-secondary {
+    color: var(--purple);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: gap 0.2s;
+  }
+
+  .btn-secondary:hover { gap: 0.7rem; }
+
+  .hero-visual {
+    margin-top: 5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 1s forwards;
+  }
+
+  /* IPHONE MOCKUP */
+  .phone-mockup {
+    width: 290px;
+    height: 580px;
+    background: linear-gradient(160deg, #1e0f45 0%, #2D1B69 40%, #3d1458 100%);
+    border-radius: 48px;
+    margin: 0 auto;
+    position: relative;
+    box-shadow:
+      0 0 0 10px #0e0820,
+      0 0 0 12px rgba(255,255,255,0.08),
+      0 40px 80px rgba(45,27,105,0.4);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* iPhone status bar */
+  .iphone-status {
+    padding: 14px 22px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+  }
+
+  .iphone-time {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: -0.3px;
+    font-family: -apple-system, 'SF Pro Display', sans-serif;
+  }
+
+  /* Dynamic island */
+  .dynamic-island {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 34px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 3;
+  }
+
+  .iphone-status-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+
+
+  /* Phone screen content */
+  .phone-screen-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem 2rem;
+    text-align: center;
+  }
+
+  .phone-charly-logo {
+    
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.02em;
+  }
+
+  .phone-charly-logo .dot { color: var(--pink); }
+
+  .phone-status-text {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .wave-bars {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    height: 56px;
+    margin-bottom: 1rem;
+  }
+
+  .wave-bar {
+    width: 5px;
+    background: linear-gradient(180deg, var(--pink) 0%, #b03578 100%);
+    border-radius: 3px;
+    animation: wave 1.2s ease-in-out infinite;
+  }
+
+  .wave-bar:nth-child(1) { animation-delay: 0s; height: 18px; }
+  .wave-bar:nth-child(2) { animation-delay: 0.12s; height: 36px; }
+  .wave-bar:nth-child(3) { animation-delay: 0.24s; height: 50px; }
+  .wave-bar:nth-child(4) { animation-delay: 0.36s; height: 32px; }
+  .wave-bar:nth-child(5) { animation-delay: 0.48s; height: 46px; }
+  .wave-bar:nth-child(6) { animation-delay: 0.36s; height: 28px; }
+  .wave-bar:nth-child(7) { animation-delay: 0.24s; height: 40px; }
+  .wave-bar:nth-child(8) { animation-delay: 0.12s; height: 22px; }
+
+  .phone-timer {
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: white;
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+
+  .end-btn {
+    width: 64px;
+    height: 64px;
+    background: #e53935;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(229,57,53,0.5);
+  }
+
+  .end-btn svg { width: 26px; height: 26px; fill: white; }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--warm-gray);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 1s 1.5s forwards;
+  }
+
+  .scroll-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--pink);
+    border-radius: 50%;
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 7rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    display: inline-block;
+    color: var(--pink);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-lead {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--warm-gray);
+    max-width: 540px;
+  }
+
+  /* HOW IT WORKS */
+  .how-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+
+  .how-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .how-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(26,20,16,0.08);
+  }
+
+  .how-card:first-child {
+    background: var(--card-bg);
+  }
+
+  .how-number {
+    
+    font-size: 3.5rem;
+    font-weight: 400;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .how-card:first-child .how-number {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .how-card h3 {
+    
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .how-card p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--warm-gray);
+  }
+
+  .how-card:first-child p { color: var(--warm-gray); }
+  .how-card:first-child h3 { color: var(--deep); }
+  .how-card:nth-child(2) .how-number,
+  .how-card:nth-child(3) .how-number,
+  .how-card:nth-child(4) .how-number {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* FOR TEACHERS */
+  .teachers-wrapper {
+    padding: 0 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .teachers-section {
+    background: linear-gradient(135deg, var(--purple) 0%, #3d1a7a 40%, #5c1e5e 100%);
+    color: white;
+    border-radius: 32px;
+    padding: 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .teachers-section::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,93,155,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .teachers-section::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(107,53,176,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .teachers-section .section-title { color: white; margin-top: 0.5rem; }
+  .teachers-section .section-lead { color: rgba(255,255,255,0.65); }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .feature-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: background 0.2s, transform 0.2s;
+    backdrop-filter: blur(4px);
+  }
+
+  .feature-card:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(232,93,155,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .feature-icon svg { width: 22px; height: 22px; stroke: var(--pink); fill: none; stroke-width: 1.5; }
+
+  .feature-card h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 0.6rem;
+  }
+
+  .feature-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .portal-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--pink-light);
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 2.5rem;
+    font-size: 0.95rem;
+    transition: gap 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .portal-link:hover { gap: 0.8rem; }
+
+  /* FOR STUDENTS */
+  .students-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+
+  .students-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 400;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .pill:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(26,20,16,0.06);
+  }
+
+  .pill-dot {
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .convo-bubbles {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .bubble {
+    max-width: 80%;
+    padding: 1rem 1.4rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .bubble.charly {
+    background: linear-gradient(135deg, var(--purple) 0%, #5c2296 100%);
+    color: white;
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+  }
+
+  .bubble.student {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--deep);
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+  }
+
+  .bubble-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: var(--warm-gray);
+  }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 8rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 50% 50%, rgba(45,27,105,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 20% 80%, rgba(232,93,155,0.08) 0%, transparent 60%);
+  }
+
+  .cta-section .section-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .cta-section .section-lead {
+    max-width: 480px;
+    margin: 0 auto 3rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--warm-gray);
+    font-size: 0.85rem;
+  }
+
+  .footer-logo {
+    
+    font-size: 1.2rem;
+    color: var(--purple);
+    font-weight: 600;
+  }
+
+  .footer-logo .dot { color: var(--pink); }
+
+  /* DIVIDER */
+  .divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    border-radius: 2px;
+    margin: 2rem 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.7; }
+  }
+
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .how-grid { grid-template-columns: 1fr; }
+    .how-card:first-child { grid-column: span 1; flex-direction: column; gap: 1rem; }
+    .features-grid { grid-template-columns: 1fr; }
+    .students-grid { grid-template-columns: 1fr; }
+    .teachers-section { padding: 3rem 2rem; }
+    section { padding: 5rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .teachers-wrapper { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Charly</a>
+  <a href="mailto:joe@callcharly.io" class="cta">Get in touch</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <span class="hero-tag">AI English Conversation Practice</span>
+  <h1><span class="normal">Real conversations.</span><br>Real progress.</h1>
+  <p>Charly is an AI conversation partner that helps students practice spoken English naturally, with personalised feedback, grammar coaching, and full visibility for teachers.</p>
+  <div class="hero-actions">
+    <a href="https://portal.callcharly.io" class="btn-primary">Teacher portal &rarr;</a>
+    <a href="mailto:joe@callcharly.io" class="btn-secondary">Book a demo &rarr;</a>
+  </div>
+
+  <div class="hero-visual">
+    <div class="phone-mockup">
+      <!-- Dynamic Island -->
+      <div class="dynamic-island"></div>
+      <!-- Status Bar -->
+      <div class="iphone-status">
+        <div class="iphone-time" id="phone-time">9:41</div>
+        <div class="iphone-status-right">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
+            <rect x="0" y="8" width="3" height="4" rx="1" fill="white"/>
+            <rect x="4.5" y="5.5" width="3" height="6.5" rx="1" fill="white"/>
+            <rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="white"/>
+            <rect x="13.5" y="0" width="3" height="12" rx="1" fill="white"/>
+          </svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+            <path d="M8 2.5C10.5 2.5 12.7 3.6 14.2 5.3L15.5 4C13.7 2 11 0.8 8 0.8C5 0.8 2.3 2 0.5 4L1.8 5.3C3.3 3.6 5.5 2.5 8 2.5Z" fill="white"/>
+            <path d="M8 5.5C9.7 5.5 11.2 6.2 12.3 7.4L13.6 6.1C12.2 4.7 10.2 3.8 8 3.8C5.8 3.8 3.8 4.7 2.4 6.1L3.7 7.4C4.8 6.2 6.3 5.5 8 5.5Z" fill="white"/>
+            <circle cx="8" cy="10.5" r="1.5" fill="white"/>
+          </svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+            <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="rgba(255,255,255,0.55)" stroke-width="1"/>
+            <rect x="2" y="2" width="15" height="8" rx="2" fill="white"/>
+            <path d="M23 4.5V7.5C23.8 7.2 24.5 6.5 24.5 6C24.5 5.5 23.8 4.8 23 4.5Z" fill="rgba(255,255,255,0.4)"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Screen Content -->
+      <div class="phone-screen-content">
+        <div class="phone-charly-logo">Charly</div>
+        <div class="phone-status-text">Active call</div>
+        <div class="wave-bars">
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+        </div>
+        <div class="phone-timer" id="call-timer">00:00</div>
+        <div class="end-btn">
+          <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-dot"></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section>
+  <span class="section-tag reveal">How it works</span>
+  <h2 class="section-title reveal reveal-delay-1">Practice English anywhere,<br>any time.</h2>
+  <p class="section-lead reveal reveal-delay-2">Students open the Charly app and start a real conversation. No scripts, no multiple choice, just natural spoken English with an AI that listens, responds, and gently improves their language along the way.</p>
+
+  <div class="how-grid">
+    <div class="how-card reveal">
+      <div class="how-number">01</div>
+      <div>
+        <h3>Teachers set the focus</h3>
+        <p>Before any call, teachers assign conversation topics and grammar focus areas for each student. Past tense, conditionals, vocabulary sets. Charly tailors every conversation to match.</p>
+      </div>
+    </div>
+    <div class="how-card reveal reveal-delay-1">
+      <div class="how-number">02</div>
+      <h3>Students call Charly</h3>
+      <p>Open the app, tap call. Within seconds students are in conversation with a warm, patient English speaker who adapts to their level and keeps things natural.</p>
+    </div>
+    <div class="how-card reveal reveal-delay-2">
+      <div class="how-number">03</div>
+      <h3>Mistakes are corrected naturally</h3>
+      <p>When a student makes a grammar error, Charly does not interrupt or correct bluntly. It weaves the correct form naturally into its next response so students hear and absorb the right pattern.</p>
+    </div>
+    <div class="how-card reveal reveal-delay-3">
+      <div class="how-number">04</div>
+      <h3>Feedback lands in the portal</h3>
+      <p>After every call, a full transcript and AI-generated feedback report appears in the teacher portal. Grammar patterns, vocabulary gaps, and improvement over time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOR TEACHERS -->
+<div class="teachers-wrapper">
+  <div class="teachers-section reveal">
+    <span class="section-tag" style="color: var(--pink-light);">For teachers</span>
+    <h2 class="section-title">Everything you need to<br>track real progress.</h2>
+    <p class="section-lead">Charly does not just give students practice. It gives teachers insight. Every conversation is logged, transcribed, and analysed so you always know exactly where each student stands.</p>
+    <div class="divider"></div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h4>Full call transcripts</h4>
+        <p>Every word of every conversation, timestamped and searchable. See exactly what was said, how the student responded, and where they hesitated.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        </div>
+        <h4>Grammar and vocabulary analysis</h4>
+        <p>Automated feedback identifies recurring grammar issues, vocabulary gaps, and patterns, without you having to listen to a single recording.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h4>Personalised per student</h4>
+        <p>Set grammar focus and conversation topics for each student individually. Charly remembers what was discussed before and builds on it naturally over time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h4>Practice time tracking</h4>
+        <p>Monitor how often each student is practising, set weekly call limits, and see usage trends across your whole class at a glance.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        </div>
+        <h4>Student memory</h4>
+        <p>Charly builds a picture of each student across calls. Their interests, their habits, their progress. Every conversation feels personal and continuous.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h4>Class-wide overview</h4>
+        <p>See all your students in one dashboard. Who is active, who has not practised this week, and who needs extra attention on specific skills.</p>
+      </div>
+    </div>
+
+    <a href="https://portal.callcharly.io" class="portal-link">
+      Visit the teacher portal &rarr;
+    </a>
+  </div>
+</div>
+
+<!-- FOR STUDENTS -->
+<section>
+  <div class="students-grid">
+    <div>
+      <span class="section-tag reveal">For students</span>
+      <h2 class="section-title reveal reveal-delay-1">Practice English<br>without the pressure.</h2>
+      <p class="section-lead reveal reveal-delay-2">Charly is a patient, curious conversation partner. No judgement, no awkwardness, just real English conversation that gets more natural the more you practise.</p>
+      <div class="students-pills reveal reveal-delay-3">
+        <div class="pill"><div class="pill-dot"></div>Natural conversations on topics you actually care about</div>
+        <div class="pill"><div class="pill-dot"></div>Grammar coaching woven in without interrupting the flow</div>
+        <div class="pill"><div class="pill-dot"></div>Available 24/7, practice whenever suits you</div>
+        <div class="pill"><div class="pill-dot"></div>Remembers what you have discussed before</div>
+        <div class="pill"><div class="pill-dot"></div>Adapts to your level automatically</div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div style="padding: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px;">
+        <div class="convo-bubbles">
+          <div>
+            <div class="bubble-label" style="color: var(--pink);">Charly</div>
+            <div class="bubble charly">What have you been up to this week?</div>
+          </div>
+          <div style="margin-top: 0.5rem;">
+            <div class="bubble-label" style="text-align: right; color: var(--warm-gray);">Student</div>
+            <div class="bubble student">Yesterday I go to the cinema with some friends.</div>
+          </div>
+          <div style="margin-top: 0.5rem;">
+            <div class="bubble-label" style="color: var(--pink);">Charly</div>
+            <div class="bubble charly">Oh nice, you went to the cinema. What did you see?</div>
+          </div>
+          <div style="margin-top: 0.75rem; padding: 0.8rem 1rem; background: rgba(232,93,155,0.07); border-radius: 12px; border-left: 3px solid var(--pink);">
+            <p style="font-size: 0.8rem; color: var(--pink); font-weight: 500; margin-bottom: 0.3rem;">Grammar coaching in action</p>
+            <p style="font-size: 0.8rem; color: var(--warm-gray);">Student said "I go" instead of "I went". Charly used the correct form naturally in its reply, keeping the conversation going.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <span class="section-tag reveal">Get started</span>
+  <h2 class="section-title reveal reveal-delay-1">Bring consistent English practice to your students.</h2>
+  <p class="section-lead reveal reveal-delay-2">Charly is currently onboarding pilot schools across Australia and beyond. If you want to give your students more speaking practice and better insights, we would love to talk.</p>
+  <div class="reveal reveal-delay-3">
+    <a href="mailto:joe@callcharly.io" class="btn-primary">Get in touch &rarr;</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Charly</div>
+  <div>&copy; 2025 Charly Pty Ltd</div>
+  <a href="https://portal.callcharly.io" style="color: var(--warm-gray); text-decoration: none;">Teacher portal</a>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  function updateTime() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes().toString().padStart(2,'0');
+    const el = document.getElementById('phone-time');
+    if (el) el.textContent = h + ':' + m;
+  }
+  updateTime();
+  setInterval(updateTime, 10000);
+
+  let callSeconds = 0;
+  setInterval(() => {
+    callSeconds++;
+    const m = Math.floor(callSeconds / 60).toString().padStart(2,'0');
+    const s = (callSeconds % 60).toString().padStart(2,'0');
+    const el = document.getElementById('call-timer');
+    if (el) el.textContent = m + ':' + s;
+  }, 1000);
+</script>
+</body>
+</html>
