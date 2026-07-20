@@ -180,6 +180,28 @@
 
   .btn-secondary:hover { gap: 0.7rem; }
 
+  /* Store badges — App Store + Google Play. Hosted locally (see repo root)
+     per Apple + Google brand-asset guidelines: badges must not be hotlinked
+     from vendor URLs. */
+  .hero-app-badges {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1.75rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.9s forwards;
+  }
+  .hero-app-badges a { display: inline-block; transition: transform 0.2s; }
+  .hero-app-badges a:hover { transform: translateY(-2px); }
+  .hero-app-badges img { height: 50px; width: auto; display: block; }
+
+  .footer-app-badges { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .footer-app-badges a { display: inline-block; transition: transform 0.2s; }
+  .footer-app-badges a:hover { transform: translateY(-2px); }
+  .footer-app-badges img { height: 40px; width: auto; display: block; }
+
   .hero-visual {
     margin-top: 5rem;
     opacity: 0;
@@ -756,6 +778,15 @@
     <a href="mailto:info@callcharly.io?subject=I'd%20like%20to%20learn%20more%20about%20Charly&body=Hi%2C%0A%0AI'd%20like%20to%20learn%20more%20about%20Charly%20and%20how%20it%20could%20work%20for%20our%20school.%0A%0AThanks" class="btn-secondary">Book a demo &rarr;</a>
   </div>
 
+  <div class="hero-app-badges">
+    <a href="https://apps.apple.com/us/app/charly/id6769320522" target="_blank" rel="noopener">
+      <img src="/app-store-badge.svg" alt="Download on the App Store" />
+    </a>
+    <a href="https://play.google.com/store/apps/details?id=io.callcharly.app&pcampaignid=web_share" target="_blank" rel="noopener">
+      <img src="/google-play-badge.png" alt="Get it on Google Play" />
+    </a>
+  </div>
+
   <div class="hero-visual">
     <div class="phone-mockup">
       <!-- Dynamic Island -->
@@ -956,6 +987,14 @@
 <footer>
   <div class="footer-logo">Charly</div>
   <div>&copy; 2026 Charly AI</div>
+  <div class="footer-app-badges">
+    <a href="https://apps.apple.com/us/app/charly/id6769320522" target="_blank" rel="noopener">
+      <img src="/app-store-badge.svg" alt="Download on the App Store" />
+    </a>
+    <a href="https://play.google.com/store/apps/details?id=io.callcharly.app&pcampaignid=web_share" target="_blank" rel="noopener">
+      <img src="/google-play-badge.png" alt="Get it on Google Play" />
+    </a>
+  </div>
   <div style="display: flex; gap: 1.5rem;">
     <a href="https://portal.callcharly.io" style="color: var(--warm-gray); text-decoration: none;">Teacher portal</a>
     <a href="/terms.html" target="_blank" style="color: var(--warm-gray); text-decoration: none;">Terms of Service</a>
