@@ -1,7 +1,3 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "//": "Serve callcharly.io/privacy from privacy.html without exposing the .html extension. Both URLs resolve — /privacy is now canonical (referenced by the app + portal + this site's own links), /privacy.html stays live so any old bookmark or shared link still works.",
-  "rewrites": [
-    { "source": "/privacy", "destination": "/privacy.html" }
-  ]
+  "cleanUrls": true
 }
