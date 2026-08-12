@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Charly — teacher portal (interactive preview)</title>
+<title>Charly: teacher portal (interactive preview)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -113,6 +113,26 @@
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
     font-size:13.5px;padding:12px 20px;border-radius:9px;opacity:0;transition:opacity .25s ease,transform .25s ease;pointer-events:none;z-index:50}
   .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---- call recording bar (non-functional, for show) ---- */
+  .recbar{background:#fff;border:1px solid var(--line);border-radius:9px;padding:12px 14px;margin-bottom:12px}
+  .rec-label{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+  .rec-controls{display:flex;align-items:center;gap:12px}
+  .rec-play{width:30px;height:30px;flex:0 0 30px;border-radius:50%;border:none;background:var(--pink);color:#fff;
+    font-size:11px;display:flex;align-items:center;justify-content:center;padding:0 0 0 2px}
+  .rec-play:hover{background:var(--pink-deep)}
+  .rec-track{flex:1;height:4px;background:var(--line);border-radius:100px;position:relative;overflow:hidden}
+  .rec-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--pink)}
+  .rec-time{font-size:11.5px;color:var(--sub);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .rec-vol{font-size:13px;color:var(--muted)}
+
+  /* ---- welcome modal ---- */
+  .welcome-overlay{position:fixed;inset:0;background:rgba(26,20,40,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
+  .welcome-modal{background:#fff;border-radius:16px;padding:32px 34px;max-width:480px;box-shadow:0 30px 70px rgba(0,0,0,.35)}
+  .welcome-eyebrow{color:var(--pink-deep);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+  .welcome-modal h2{font-size:22px;font-weight:700;margin:0 0 14px;line-height:1.3}
+  .welcome-modal p{font-size:14px;line-height:1.65;color:var(--sub);margin:0 0 22px}
+  .welcome-modal .btn{width:100%;padding:12px 20px;font-size:14px}
 
   @media (max-width:1000px){#sidebar{width:190px;flex:0 0 190px}#main{padding:26px}}
 </style>
@@ -265,39 +285,60 @@
 
 <div class="toast" id="toast"></div>
 
+<div class="welcome-overlay" id="welcome-overlay">
+  <div class="welcome-modal">
+    <div class="welcome-eyebrow">Demo portal</div>
+    <h2>Welcome to the Charly portal demo</h2>
+    <p>Everything you see here (students, classes, calls, feedback, teachers) is made up for demonstration purposes. Nothing is a real school or a real student, no audio actually plays, and nothing you click here affects a real account. This is just here to show how the real portal works and feels to use. Click around freely. Nothing can break.</p>
+    <button class="btn" id="welcome-close">Explore the demo</button>
+  </div>
+</div>
+
 <script>
 /* ---------------- feedback templates (reused across calls, "{name}" fills in) ---------------- */
 const FEEDBACK_TEMPLATES = [
-  { grammar:["[0:32] 'I go there yesterday' → 'I went there yesterday'","[2:10] 'she don't know' → 'she doesn't know'"],
-    vocab:["[1:05] Used a great range of descriptive words without hesitating."],
-    strengths:"Confident, natural pace throughout, and asked a follow-up question unprompted.",
-    focus:"Keep practising irregular past-tense verbs — a small, easily fixable pattern.",
-    transcript:[["Charly","Hi {name}, how's your week been?"],["{name}","Really good thanks, busy but good."],["Charly","Nice, tell me about the busiest part."]] },
-  { grammar:["[0:48] 'I have work there' → 'I have worked there'"],
-    vocab:["[3:20] Reached for a slightly formal word where a simpler one would do — easy fix."],
-    strengths:"Structured the answer clearly with a beginning, middle and end. Great turn-taking.",
-    focus:"Present perfect with 'for' and 'since' — coming along nicely.",
-    transcript:[["Charly","Let's talk about something you're proud of."],["{name}","I think finishing my project last month, it was hard."],["Charly","That's great — what was the hardest part?"]] },
-  { grammar:["None noted — a clean call."],
-    vocab:["[2:15] Used a slightly literal translation, but the meaning was still clear."],
-    strengths:"Strong narrative flow, good use of linking words like 'then' and 'after that'.",
-    focus:"Nothing urgent — keep building vocabulary range on this topic.",
-    transcript:[["Charly","Tell me about somewhere you'd like to visit."],["{name}","I want to go to Japan, for the food and the culture."],["Charly","What would you want to try first?"]] },
-  { grammar:["[1:14] 'depend' → 'it depends' (missing subject)"],
-    vocab:["[4:02] Hesitated briefly on a word, then self-corrected well."],
-    strengths:"Recovered smoothly from hesitation without losing the thread of the conversation.",
-    focus:"Small habit to build: give 'it' a job in short answers like 'it depends'.",
-    transcript:[["Charly","How often do you do that?"],["{name}","Depend, sometimes every day, sometimes not."],["Charly","Got it — what makes the difference?"]] },
-  { grammar:["[0:20] 'more better' → 'better'"],
-    vocab:["[5:40] Used an interesting idiom naturally — impressive for this level."],
-    strengths:"Genuinely enjoyable conversation, asked thoughtful follow-up questions throughout.",
-    focus:"One small comparative form to tidy up, otherwise very strong.",
-    transcript:[["Charly","Which do you prefer, and why?"],["{name}","I think this one is more better, honestly."],["Charly","Interesting — what tipped it for you?"]] },
-  { grammar:["[2:48] 'since three years' → 'for three years'"],
-    vocab:["[6:10] Vocabulary was accurate and varied throughout — no gaps noted."],
-    strengths:"Confident throughout with barely any hesitation. A pleasure to listen to.",
-    focus:"Just one preposition pattern to reinforce — 'for' with a length of time.",
-    transcript:[["Charly","How long have you been doing that?"],["{name}","Since three years now, I really enjoy it."],["Charly","That's a great habit to have."]] }
+  { grammar:["[0:32] 'I go there yesterday' → 'I went there yesterday', past simple needed for a completed action.",
+              "[2:10] 'she don't know' → 'she doesn't know', third-person singular agreement.",
+              "[5:47] 'I am living here since three years' → 'I have been living here for three years', present perfect continuous for an ongoing situation."],
+    vocab:["[1:05] Used a great range of descriptive words without hesitating, 'exhausting', 'rewarding' and 'overwhelming' all used correctly in context.",
+           "[4:30] Reached for a slightly informal phrase where a more neutral one would fit this context a little better, a style note rather than an error."],
+    strengths:"Confident, natural pace throughout the call, asked a follow-up question completely unprompted, and recovered smoothly whenever a sentence started to go the wrong way. This felt like a genuine conversation rather than a language drill, which is exactly the goal.",
+    focus:"Keep practising irregular past-tense verbs and present perfect continuous for ongoing situations, both are small, easily fixable patterns rather than a broader gap in ability.",
+    transcript:[["Charly","Hi {name}, how's your week been?"],["{name}","Really good thanks, busy but good."],["Charly","Nice, tell me about the busiest part."],["{name}","Probably Tuesday, I go to the market early and then work all afternoon."]] },
+  { grammar:["[0:48] 'I have work there' → 'I have worked there', past participle needed after 'have'.",
+              "[3:35] 'the meeting was very much useful' → 'the meeting was really useful', 'very much' doesn't sit naturally before an adjective.",
+              "[7:02] 'he explain me' → 'he explained to me', 'explain' needs 'to' before an indirect object."],
+    vocab:["[3:20] Reached for a slightly formal word where a simpler one would do, easy fix, not a real gap."],
+    strengths:"Structured the answer clearly with a beginning, middle and end, and showed genuinely good turn-taking, waiting for a natural pause before jumping in rather than talking over Charly.",
+    focus:"Present perfect with 'for' and 'since' is coming along nicely; the next habit to build is remembering 'to' after reporting verbs like 'explain' and 'suggest'.",
+    transcript:[["Charly","Let's talk about something you're proud of."],["{name}","I think finishing my project last month, it was hard."],["Charly","That's great, what was the hardest part?"],["{name}","Getting everyone to agree, my manager he explain me what he wanted but the team wanted something different."]] },
+  { grammar:["None noted, a clean call from start to finish."],
+    vocab:["[2:15] Used a slightly literal translation ('touristic'), but the meaning was still completely clear.",
+           "[6:48] Reached naturally for a more precise word ('breathtaking') instead of a generic one, a nice upgrade in word choice."],
+    strengths:"Strong narrative flow throughout, with good use of linking words like 'then', 'after that' and 'eventually' to keep the story moving. Also handled an interruption from Charly gracefully and picked the thread back up without losing track.",
+    focus:"Nothing urgent from this call, the main opportunity is simply building vocabulary range around this topic so fewer literal translations are needed.",
+    transcript:[["Charly","Tell me about somewhere you'd like to visit."],["{name}","I want to go to Japan, for the food and the culture."],["Charly","What would you want to try first?"],["{name}","Definitely the food in Osaka, I heard it's very touristic there but still amazing."]] },
+  { grammar:["[1:14] 'depend' → 'it depends', missing subject in a short answer.",
+              "[4:55] 'the informations' → 'the information', 'information' is uncountable and has no plural form.",
+              "[8:20] 'I am agree' → 'I agree', 'agree' is a verb on its own, no 'be' needed before it."],
+    vocab:["[4:02] Hesitated briefly on a word, then self-corrected well without breaking the flow of the sentence."],
+    strengths:"Recovered smoothly from hesitation without losing the thread of the conversation, and gave genuinely thoughtful, considered answers rather than the first thing that came to mind.",
+    focus:"Three small, very fixable habits to build: 'it depends' as a full phrase, 'information' with no plural 's', and 'agree' as a standalone verb.",
+    transcript:[["Charly","How often do you do that?"],["{name}","Depend, sometimes every day, sometimes not."],["Charly","Got it, what makes the difference?"],["{name}","Mostly the weather, if it's good I go, if not I stay home and check the informations online instead."]] },
+  { grammar:["[0:20] 'more better' → 'better', double comparative.",
+              "[3:42] 'since two months' → 'for two months', 'for' with a length of time, not 'since'.",
+              "[6:15] 'have you ever went' → 'have you ever gone', irregular past participle after 'have'."],
+    vocab:["[5:40] Used an interesting idiom naturally, genuinely impressive for this level and used in exactly the right context."],
+    strengths:"Genuinely enjoyable conversation, asked thoughtful follow-up questions throughout, and stayed fully engaged even when the topic shifted unexpectedly midway through the call.",
+    focus:"One small comparative form and one irregular participle to tidy up, otherwise this is a strong, confident speaker who's very close to sounding fully natural.",
+    transcript:[["Charly","Which do you prefer, and why?"],["{name}","I think this one is more better, honestly."],["Charly","Interesting, what tipped it for you?"],["{name}","I've been using it since two months and it's just easier, have you ever went somewhere and just known straight away?"]] },
+  { grammar:["[2:48] 'since three years' → 'for three years', 'for' with a length of time.",
+              "[5:10] 'he don't like it' → 'he doesn't like it', third-person singular agreement.",
+              "[9:33] 'more easier' → 'easier', double comparative."],
+    vocab:["[6:10] Vocabulary was accurate and varied throughout, including a couple of less common words used precisely and confidently."],
+    strengths:"Confident throughout with barely any hesitation, and consistently gave full, developed answers rather than short ones, genuinely a pleasure to listen back to.",
+    focus:"Just two small, recurring patterns to reinforce, 'for' with lengths of time, and dropping the extra 'more' before short comparative adjectives.",
+    transcript:[["Charly","How long have you been doing that?"],["{name}","Since three years now, I really enjoy it."],["Charly","That's a great habit to have."],["{name}","Yeah, my brother he don't like it as much as me, he thinks it's more easier to just stay home."]] }
 ];
 function fillTemplate(tpl, firstName){
   return { grammar:tpl.grammar, vocab:tpl.vocab, strengths:tpl.strengths, focus:tpl.focus,
@@ -310,30 +351,30 @@ const DURATIONS = ["6:45","7:58","8:20","9:12","9:52","10:40","11:15","11:30","1
 
 /* ---------------- base student data ---------------- */
 const STUDENT_BASE = [
-  {id:'s1', name:'Amara Okafor', level:'B1', classId:'c2', override:false, topics:['Family','Travel'], grammar:['Past simple'], used:62, limit:140, status:'active', callCount:4,
-   summary:{ grammar:"Consistent with present tense but regularly drops endings on regular past-simple verbs and mixes up subject-verb agreement in negatives.",
-             vocab:"Comfortable with everyday family and travel topics, occasionally reaches for a direct translation instead of the natural phrase.",
-             strengths:"Confident and willing to elaborate without prompting, with strong narrative flow.",
-             progress:"Over 8 sessions, steady improvement in fluency. Past-simple accuracy is the clearest next target.", basedOn:8 } },
-  {id:'s2', name:'Diego Fernandez', level:'B2', classId:'c2', override:true, topics:['Job interviews'], grammar:['Present perfect'], used:88, limit:140, status:'active', callCount:4,
-   summary:{ grammar:"Present perfect is the clearest recurring gap, especially with 'for'/'since' and irregular participles. Occasional 'be' + adjective errors.",
-             vocab:"Strong professional vocabulary overall, with occasional literal translations around responsibility and roles.",
-             strengths:"Structured, confident answers with clear situation-task-result framing. Recovers well from self-corrections.",
-             progress:"Over 11 sessions, interview fluency has improved steadily. Present perfect accuracy is the highest-leverage next focus.", basedOn:11 } },
-  {id:'s3', name:'Mei Lin', level:'B1', classId:'c2', override:false, topics:['Hobbies','Food'], grammar:['Past simple'], used:15, limit:140, status:'active', callCount:3, summary:null},
-  {id:'s4', name:'Carla Ibanez', level:'A2', classId:'c2', override:false, topics:['Daily routine'], grammar:['Present simple'], used:40, limit:140, status:'active', callCount:3, summary:null},
-  {id:'s5', name:'Yusuf Demir', level:'B2', classId:'c3', override:true, topics:['Films','Sports'], grammar:['Past perfect'], used:0, limit:140, status:'suspended', callCount:2, summary:null},
-  {id:'s6', name:'Haruto Sato', level:'B2', classId:'c1', override:true, topics:['Travel','Culture'], grammar:['Conditionals'], used:130, limit:140, status:'active', callCount:5, summary:null},
-  {id:'s7', name:'Valentina Rossi', level:'B1', classId:'c3', override:false, topics:['Family','Work'], grammar:['Future forms'], used:22, limit:140, status:'active', callCount:3, summary:null},
-  {id:'s8', name:'Kenji Watanabe', level:'B2', classId:'c4', override:false, topics:['Technology'], grammar:['Present perfect'], used:5, limit:140, status:'active', callCount:2, summary:null},
-  {id:'s9', name:'Sofia Martins', level:'B1', classId:'c4', override:false, topics:['Weekend plans'], grammar:['Present continuous'], used:48, limit:140, status:'active', callCount:4, summary:null},
-  {id:'s10', name:'Lucas Silva', level:'A2', classId:'c1', override:false, topics:['Daily routine','Food'], grammar:['Present simple'], used:33, limit:140, status:'active', callCount:3, summary:null},
-  {id:'s11', name:'Aiko Tanaka', level:'B2', classId:'c4', override:false, topics:['Culture','Films'], grammar:['Past perfect'], used:76, limit:140, status:'active', callCount:4, summary:null},
-  {id:'s12', name:'Emre Yildiz', level:'B1', classId:'c3', override:false, topics:['Sports','Travel'], grammar:['Comparatives'], used:58, limit:140, status:'active', callCount:3, summary:null},
-  {id:'s13', name:'Noor Al-Sayed', level:'A2', classId:'c1', override:false, topics:['Family'], grammar:['Present simple'], used:19, limit:140, status:'active', callCount:2, summary:null},
-  {id:'s14', name:'Ananya Rao', level:'B2', classId:'c4', override:false, topics:['Job interviews','Technology'], grammar:['Present perfect'], used:95, limit:140, status:'active', callCount:5, summary:null},
-  {id:'s15', name:'Matteo Conti', level:'B1', classId:'c1', override:false, topics:['Travel','Food'], grammar:['Past simple'], used:41, limit:140, status:'active', callCount:3, summary:null},
-  {id:'s16', name:'Hana Kobayashi', level:'B2', classId:'c3', override:false, topics:['Culture','Work'], grammar:['Conditionals'], used:67, limit:140, status:'active', callCount:4, summary:null}
+  {id:'s1', name:'Amara Okafor', level:'B1', classId:'c2', override:false, topics:['Family','Travel'], grammar:['Past simple'], used:62, limit:140, status:'active', callCount:8,
+   summary:{ grammar:"Amara is consistent with present tense and simple sentence structure, but regularly drops the '-ed' ending on regular past-simple verbs ('I go' instead of 'I went') and mixes up subject-verb agreement in negative statements ('she don't like' instead of 'she doesn't like'). These are the two clearest, most repeated patterns across recent calls, rather than a broad grammar gap, everything else in her sentence structure is solid for the level.",
+             vocab:"Comfortable and fluent with everyday family and travel topics, and has a genuinely wide working vocabulary for describing people, routines and places. She occasionally reaches for a direct translation from her first language instead of the natural English phrase ('touristic' instead of 'popular with tourists'), but these moments are rare and never block understanding, Charly is able to note them as light vocabulary-building opportunities rather than corrections.",
+             strengths:"Confident and willing to elaborate without being prompted, with a strong narrative flow when telling stories, she naturally uses sequencing language like 'first', 'then' and 'after that' to structure longer answers. She also recovers smoothly from small mistakes mid-sentence without losing her train of thought, which is a genuinely advanced conversational skill many learners take much longer to develop.",
+             progress:"Over 8 sessions, Amara has shown steady, measurable improvement in overall fluency and confidence, speaking for longer stretches with fewer pauses each week. Past-simple accuracy on regular verbs remains the single clearest next target, everything else is tracking well above where a typical B1 speaker would be at this stage, and she's a strong candidate to move toward B2-level material soon.", basedOn:8 } },
+  {id:'s2', name:'Diego Fernandez', level:'B2', classId:'c2', override:true, topics:['Job interviews'], grammar:['Present perfect'], used:88, limit:140, status:'active', callCount:11,
+   summary:{ grammar:"Present perfect is Diego's clearest recurring gap, especially around 'for' and 'since' with time periods, and irregular past participles like 'gone', 'seen' and 'done'. There's also an occasional 'be' + adjective pattern ('I am agree' instead of 'I agree') that shows up under pressure, typically early in a call before he settles in. None of these affect how clearly he communicates, they're the kind of precise, fixable patterns that come up specifically in interview-style speaking.",
+             vocab:"Strong, genuinely professional vocabulary overall, he's comfortable discussing responsibilities, achievements and workplace situations with real precision. The only recurring gap is an occasional literal translation around responsibility and roles ('responsible of' instead of 'responsible for'), which Charly has now flagged consistently enough across multiple calls that it's become a clear, specific coaching point rather than a one-off.",
+             strengths:"Structures answers clearly using a situation-task-result pattern that would serve him well in a real interview, and recovers smoothly and quickly after self-correcting mid-sentence without losing his composure or train of thought. He also handles follow-up questions confidently rather than sticking rigidly to a rehearsed answer, which is exactly the skill interview practice is meant to build.",
+             progress:"Over 11 sessions, Diego's interview fluency has improved steadily and noticeably, his answers have become longer, better organised, and more naturally delivered with each passing week. Present perfect accuracy with 'for' and 'since' is now the single highest-leverage focus remaining; everything else in his interview technique is at a genuinely strong, near-native level of confidence.", basedOn:11 } },
+  {id:'s3', name:'Mei Lin', level:'B1', classId:'c2', override:false, topics:['Hobbies','Food'], grammar:['Past simple'], used:15, limit:140, status:'active', callCount:6, summary:null},
+  {id:'s4', name:'Carla Ibanez', level:'A2', classId:'c2', override:false, topics:['Daily routine'], grammar:['Present simple'], used:40, limit:140, status:'active', callCount:5, summary:null},
+  {id:'s5', name:'Yusuf Demir', level:'B2', classId:'c3', override:true, topics:['Films','Sports'], grammar:['Past perfect'], used:0, limit:140, status:'suspended', callCount:4, summary:null},
+  {id:'s6', name:'Haruto Sato', level:'B2', classId:'c1', override:true, topics:['Travel','Culture'], grammar:['Conditionals'], used:130, limit:140, status:'active', callCount:9, summary:null},
+  {id:'s7', name:'Valentina Rossi', level:'B1', classId:'c3', override:false, topics:['Family','Work'], grammar:['Future forms'], used:22, limit:140, status:'active', callCount:6, summary:null},
+  {id:'s8', name:'Kenji Watanabe', level:'B2', classId:'c4', override:false, topics:['Technology'], grammar:['Present perfect'], used:5, limit:140, status:'active', callCount:5, summary:null},
+  {id:'s9', name:'Sofia Martins', level:'B1', classId:'c4', override:false, topics:['Weekend plans'], grammar:['Present continuous'], used:48, limit:140, status:'active', callCount:7, summary:null},
+  {id:'s10', name:'Lucas Silva', level:'A2', classId:'c1', override:false, topics:['Daily routine','Food'], grammar:['Present simple'], used:33, limit:140, status:'active', callCount:5, summary:null},
+  {id:'s11', name:'Aiko Tanaka', level:'B2', classId:'c4', override:false, topics:['Culture','Films'], grammar:['Past perfect'], used:76, limit:140, status:'active', callCount:8, summary:null},
+  {id:'s12', name:'Emre Yildiz', level:'B1', classId:'c3', override:false, topics:['Sports','Travel'], grammar:['Comparatives'], used:58, limit:140, status:'active', callCount:6, summary:null},
+  {id:'s13', name:'Noor Al-Sayed', level:'A2', classId:'c1', override:false, topics:['Family'], grammar:['Present simple'], used:19, limit:140, status:'active', callCount:4, summary:null},
+  {id:'s14', name:'Ananya Rao', level:'B2', classId:'c4', override:false, topics:['Job interviews','Technology'], grammar:['Present perfect'], used:95, limit:140, status:'active', callCount:9, summary:null},
+  {id:'s15', name:'Matteo Conti', level:'B1', classId:'c1', override:false, topics:['Travel','Food'], grammar:['Past simple'], used:41, limit:140, status:'active', callCount:6, summary:null},
+  {id:'s16', name:'Hana Kobayashi', level:'B2', classId:'c3', override:false, topics:['Culture','Work'], grammar:['Conditionals'], used:67, limit:140, status:'active', callCount:7, summary:null}
 ];
 
 const STUDENTS = {};
@@ -352,14 +393,16 @@ STUDENT_BASE.forEach((base, idx)=>{
 
 const CLASSES = {
   c1:{ name:'Beginners A', teacher:'Tom Candia', topics:['Weekend plans'], grammar:['Present simple'], studentIds:['s6','s10','s13','s15'] },
-  c2:{ name:'Intermediate B', teacher:'Tom Candia', topics:[], grammar:[], studentIds:['s1','s2','s3','s4'] },
+  c2:{ name:'Intermediate B', teacher:'Grace Malone', topics:[], grammar:[], studentIds:['s1','s2','s3','s4'] },
   c3:{ name:'Advanced C', teacher:'Mark Uddin', topics:['Current events'], grammar:['Reported speech'], studentIds:['s5','s7','s12','s16'] },
-  c4:{ name:'Evening group', teacher:'Mark Uddin', topics:['Free talk'], grammar:['Mixed review'], studentIds:['s8','s9','s11','s14'] }
+  c4:{ name:'Evening group', teacher:'Wei Chen', topics:['Free talk'], grammar:['Mixed review'], studentIds:['s8','s9','s11','s14'] }
 };
 
 let TEACHERS = [
   { name:'Tom Candia', email:'tom.candia@yourlanguagecollege.edu', role:'Admin' },
-  { name:'Mark Uddin', email:'mark.uddin@yourlanguagecollege.edu', role:'Teacher' }
+  { name:'Grace Malone', email:'grace.malone@yourlanguagecollege.edu', role:'Teacher' },
+  { name:'Mark Uddin', email:'mark.uddin@yourlanguagecollege.edu', role:'Teacher' },
+  { name:'Wei Chen', email:'wei.chen@yourlanguagecollege.edu', role:'Teacher' }
 ];
 
 let currentStudentId = null, currentClassId = null;
@@ -450,7 +493,7 @@ document.getElementById('cd-save').onclick = ()=>{
     if(!s.override){ s.topics = c.topics.slice(); s.grammar = c.grammar.slice(); }
   });
   renderClassDetail(currentClassId);
-  toast('Saved — applied to every student without an individual override.');
+  toast('Saved. Applied to every student without an individual override.');
 };
 document.getElementById('cd-addbtn').onclick = ()=>{
   const panel = document.getElementById('cd-addpanel');
@@ -463,7 +506,10 @@ document.getElementById('cd-addbtn').onclick = ()=>{
   panel.style.display='block';
   document.getElementById('cd-confirmadd').onclick = ()=>{
     panel.querySelectorAll('input[type=checkbox]:checked').forEach(cb=>{
-      c.studentIds.push(cb.value); STUDENTS[cb.value].classId = currentClassId;
+      const sid = cb.value;
+      const oldClass = CLASSES[STUDENTS[sid].classId];
+      if(oldClass){ const i = oldClass.studentIds.indexOf(sid); if(i>-1) oldClass.studentIds.splice(i,1); }
+      c.studentIds.push(sid); STUDENTS[sid].classId = currentClassId;
     });
     renderClassDetail(currentClassId);
     toast('Students added to class.');
@@ -481,7 +527,7 @@ function renderStudent(id, from){
   document.getElementById('st-usage').textContent = `${s.used} / ${s.limit} min`;
   document.getElementById('st-suspend').textContent = s.status==='active' ? 'Suspend' : 'Reactivate';
   document.getElementById('st-override-note').textContent = s.override
-    ? 'This student has an individual override — class-wide saves will not change their focus.'
+    ? 'This student has an individual override. Class-wide saves will not change their focus.'
     : 'This student is using the class default. Editing here will set an individual override.';
   wireTagInput('st-topics', s.topics, false);
   wireTagInput('st-grammar', s.grammar, true);
@@ -491,7 +537,16 @@ function renderStudent(id, from){
       <td><span class="showlink" data-toggle-call="${i}">Show</span></td></tr>
     <tr id="call-detail-${i}" style="display:none"><td colspan="4">
       <div class="callrow-detail">
-        <div class="valuecallout">💡 <strong>This is the visibility no teacher has time to build by hand.</strong> Full feedback on every call, generated automatically — instead of you spending 15+ minutes reviewing each conversation yourself, for every student, every week.</div>
+        <div class="recbar">
+          <div class="rec-label">Call recording · ${call.duration}</div>
+          <div class="rec-controls">
+            <button class="rec-play" data-play type="button" aria-label="Play recording">&#9658;</button>
+            <div class="rec-track"><div class="rec-fill"></div></div>
+            <span class="rec-time">0:00 / ${call.duration}</span>
+            <span class="rec-vol">&#128266;</span>
+          </div>
+        </div>
+        <div class="valuecallout">💡 <strong>This is the visibility no teacher has time to build by hand.</strong> Full feedback on every call, generated automatically, instead of you spending 15+ minutes reviewing each conversation yourself, for every student, every week.</div>
         <div class="fbgrid">
           <div class="fbbox gram"><div class="fbh">Grammar errors</div><div>${call.feedback.grammar.join('<br>')}</div></div>
           <div class="fbbox vocab"><div class="fbh">Vocabulary gaps</div><div>${call.feedback.vocab.join('<br>')}</div></div>
@@ -525,10 +580,12 @@ function renderStudent(id, from){
     box.innerHTML = `<div class="placeholder">Generating…</div>`;
     setTimeout(()=>{
       if(!s.summary){
-        s.summary = { grammar:'A handful of small, consistent patterns rather than random mistakes — a good early sign.',
-                       vocab:'Vocabulary use is already appropriate for the level, with nothing recurring to flag yet.',
-                       strengths:'Willing to attempt full sentences and keep the conversation moving rather than giving one-word answers.',
-                       progress:`Based on ${s.calls.length} call${s.calls.length===1?'':'s'} so far — a solid start.`, basedOn:s.calls.length };
+        s.summary = {
+          grammar:`Across recent calls, ${s.name.split(' ')[0]}'s grammar shows a handful of small, consistent patterns rather than random mistakes, the kind of thing that comes from a genuine underlying rule rather than carelessness. The most frequent slip is around tense agreement in longer sentences, particularly when a story moves between past and present within the same answer. There's also the occasional dropped article ('a', 'the') before a countable noun, though this rarely affects how clearly the point comes across. None of these patterns are severe enough to interrupt the flow of conversation, and they're consistent enough call to call that they'd respond well to a few minutes of targeted practice.`,
+          vocab:`Vocabulary use is already appropriate for the level and topic, with a comfortable working range for everyday conversation. ${s.name.split(' ')[0]} occasionally reaches for a more general word where a more specific one would fit better, which Charly flags as a light vocabulary-building note rather than a correction, these moments never block understanding, and often the intended meaning is still perfectly clear from context. There's a noticeable willingness to attempt less common words rather than defaulting to the safest, simplest option, which is a good sign for continued growth.`,
+          strengths:`Consistently willing to attempt full, developed sentences and keep the conversation moving rather than giving short or one-word answers, which makes each call feel like a genuine conversation rather than a language drill. There's also a clear pattern of self-correction, noticing a mistake mid-sentence and fixing it without losing the thread of what's being said, which is a more advanced conversational skill than it might first appear. Charly has also noted a growing willingness to ask Charly questions back, which is a strong signal of genuine engagement rather than just answering on autopilot.`,
+          progress:`Based on ${s.calls.length} call${s.calls.length===1?'':'s'} so far, engagement has been steady and consistent, with noticeably fewer long pauses and hesitations in the most recent sessions compared to the earliest ones. The overall trend across this period points toward growing confidence and fluency rather than a plateau, and the current grammar and vocabulary patterns are specific and fixable enough that a few more focused sessions should show a measurable difference. This is a strong foundation to keep building on.`,
+          basedOn:s.calls.length };
       }
       box.innerHTML = renderSummaryHtml(s.summary);
       genBtn.textContent = 'Refresh';
@@ -568,7 +625,7 @@ document.getElementById('tc-create').onclick = ()=>{
   TEACHERS.push({ name, email, role });
   document.getElementById('tc-name').value=''; document.getElementById('tc-email').value='';
   renderTeachers();
-  toast('Teacher account created — invite sent to ' + email);
+  toast('Teacher account created. Invite sent to ' + email);
 };
 
 /* ---------------- settings ---------------- */
@@ -576,6 +633,25 @@ document.getElementById('copy-code').onclick = ()=>{
   navigator.clipboard?.writeText('YLC94').catch(()=>{});
   toast('Invite code copied.');
 };
+
+/* ---------------- welcome modal ---------------- */
+document.getElementById('welcome-close').onclick = ()=>{
+  document.getElementById('welcome-overlay').style.display='none';
+};
+document.getElementById('welcome-overlay').addEventListener('click', e=>{
+  if(e.target.id==='welcome-overlay') document.getElementById('welcome-overlay').style.display='none';
+});
+// Force the modal visible on every visit, including when a browser restores
+// this page from bfcache instead of doing a fresh load (e.g. clicking the
+// same link again after it was already open in a tab).
+window.addEventListener('pageshow', ()=>{
+  document.getElementById('welcome-overlay').style.display='flex';
+});
+
+/* ---------------- fake recording player ---------------- */
+document.getElementById('app').addEventListener('click', e=>{
+  if(e.target.closest('[data-play]')) toast('Nothing to hear here. This is a demo recording.');
+});
 
 /* ---------------- navigation ---------------- */
 function showPage(name){
