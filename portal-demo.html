@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Charly — teacher portal (interactive preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A1A18; --sub:#7A7870; --muted:#9A968C; --line:#EDEAE1;
+    --side:#241645; --pink:#E85D9B; --pink-deep:#B8285F;
+    --purple-bg:#EDE7F8; --purple-ink:#3B2472;
+    --pink-bg:#FDE6EF;
+    --green-bg:#E7F5EC; --green-ink:#1E7A4C;
+    --gray-bg:#F1EFE8; --gray-ink:#6B6A63;
+    --amber-bg:#FBEFE9; --amber-ink:#8A4A2E;
+    --blue-bg:#E6F1FB; --blue-ink:#0C447C;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Poppins,-apple-system,sans-serif;background:#EFEDE6;color:var(--ink)}
+  button{font-family:inherit;cursor:pointer}
+  #app{display:flex;min-height:100vh}
+
+  #sidebar{width:230px;flex:0 0 230px;background:var(--side);padding:26px 18px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+  .logo{color:var(--pink);font-size:24px;font-weight:700;margin-bottom:34px}
+  .navitem{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:9px;font-size:15px;color:#B9AFD6;margin-bottom:2px;transition:background .15s ease,color .15s ease}
+  .navitem:hover{background:rgba(255,255,255,.06);color:#fff}
+  .navitem.active{color:var(--pink);background:rgba(232,93,155,.1)}
+  .sidefoot{margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);font-size:12.5px;color:#9A8FC2}
+  .sidefoot .who{color:#fff;font-size:14px;margin-bottom:2px}
+
+  #main{flex:1;padding:40px 48px;max-width:1400px}
+  .page{display:none}
+  .page.active{display:block}
+  .crumb{font-size:13px;color:var(--pink-deep);cursor:pointer;margin-bottom:10px;display:inline-block}
+  .crumb:hover{text-decoration:underline}
+  h1{font-size:28px;font-weight:700;margin:0 0 4px}
+  .subtitle{font-size:14px;color:var(--sub);margin:0 0 26px}
+  .pagehead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:20px}
+  .card h3{font-size:15px;font-weight:600;margin:0 0 14px}
+  .fieldnote{font-size:12px;color:var(--muted);margin-top:6px}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .stat b{display:block;font-size:32px;font-weight:700}
+  .stat span{font-size:13px;color:var(--sub)}
+
+  table{width:100%;border-collapse:collapse}
+  th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+  td{font-size:13.5px;padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tr.clickable{cursor:pointer;transition:background .12s ease}
+  tr.clickable:hover{background:#FAF8F3}
+  .rowname{font-weight:600}
+
+  .chip{display:inline-flex;align-items:center;gap:5px;background:var(--purple-bg);color:var(--purple-ink);font-size:12px;font-weight:600;padding:5px 11px;border-radius:100px;margin:2px 4px 2px 0}
+  .chip.g{background:var(--pink-bg);color:var(--pink-deep)}
+  .chip .rm{cursor:pointer;opacity:.55;font-weight:700}
+  .chip .rm:hover{opacity:1}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:5px 12px;border-radius:100px;border:1px solid}
+  .pill.active{background:var(--green-bg);color:var(--green-ink);border-color:#BFE5D0}
+  .pill.suspended{background:var(--gray-bg);color:var(--gray-ink);border-color:#DEDCD3}
+  .pill.usage{background:var(--green-bg);color:var(--green-ink);border-color:#BFE5D0}
+  .pill.usage.off{background:var(--gray-bg);color:var(--gray-ink);border-color:#DEDCD3}
+
+  .btn{background:var(--pink);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:13.5px;font-weight:600}
+  .btn:hover{background:var(--pink-deep)}
+  .btn.outline{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn.outline:hover{background:#FAF8F3}
+  .btn.sm{padding:7px 14px;font-size:12.5px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .field input,.field select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;color:var(--ink)}
+  .field input:focus,.field select:focus{outline:2px solid var(--pink);outline-offset:-1px}
+  .taginput{border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:44px;display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+  .taginput input{border:none;outline:none;flex:1;min-width:140px;font-size:13px;font-family:inherit;padding:4px}
+  .fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+
+  .callrow-detail{background:#FAF8F3;border-radius:11px;padding:16px 18px;margin:4px 0 14px}
+  .valuecallout{background:var(--pink-bg);border:1px solid #F6C4D9;border-radius:9px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.6;color:#7A1E45}
+  .valuecallout strong{color:var(--pink-deep)}
+  .fbgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  .fbbox{background:#fff;border-radius:9px;padding:13px 14px;border:1px solid var(--line)}
+  .fbbox .fbh{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
+  .fbbox p,.fbbox div{font-size:12.5px;line-height:1.55;color:#3A3550;margin:0}
+  .fbbox.gram .fbh{color:var(--amber-ink)}
+  .fbbox.vocab .fbh{color:var(--purple-ink)}
+  .fbbox.str .fbh{color:var(--green-ink)}
+  .fbbox.next .fbh{color:var(--blue-ink)}
+  .transcript{font-size:12.5px;line-height:1.85;color:#5A584F}
+  .transcript b{color:var(--ink)}
+  .showlink{color:#185FA5;font-size:13px;cursor:pointer}
+  .showlink:hover{text-decoration:underline}
+
+  .sumgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sumbox{border-radius:10px;padding:16px 17px}
+  .sumbox .fbh{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+  .sumbox p{font-size:13px;line-height:1.6;margin:0}
+  .sumbox.gram{background:var(--amber-bg)}.sumbox.gram .fbh{color:var(--amber-ink)}.sumbox.gram p{color:#5A3624}
+  .sumbox.vocab{background:var(--purple-bg)}.sumbox.vocab .fbh{color:var(--purple-ink)}.sumbox.vocab p{color:#3E3560}
+  .sumbox.str{background:var(--green-bg)}.sumbox.str .fbh{color:var(--green-ink)}.sumbox.str p{color:#204D34}
+  .sumbox.prog{background:var(--blue-bg)}.sumbox.prog .fbh{color:var(--blue-ink)}.sumbox.prog p{color:#0D3A5C}
+  .genrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .placeholder{font-size:13.5px;color:var(--sub)}
+
+  .addpanel{background:#FAF8F3;border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin-bottom:18px}
+  .addrow{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--line)}
+  .addrow:last-child{border-bottom:none}
+  .addrow input[type=checkbox]{width:16px;height:16px}
+
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
+    font-size:13.5px;padding:12px 20px;border-radius:9px;opacity:0;transition:opacity .25s ease,transform .25s ease;pointer-events:none;z-index:50}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:1000px){#sidebar{width:190px;flex:0 0 190px}#main{padding:26px}}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="sidebar">
+    <div class="logo">Charly</div>
+    <div class="navitem" data-nav="dashboard">Dashboard</div>
+    <div class="navitem" data-nav="classes">Classes</div>
+    <div class="navitem" data-nav="teachers">Teachers</div>
+    <div class="navitem" data-nav="settings">Settings</div>
+    <div class="navitem">Help</div>
+    <div class="sidefoot">
+      <div class="who">Tom Candia</div>
+      <div>Admin &middot; Your Language College</div>
+    </div>
+  </div>
+
+  <div id="main">
+
+    <div class="page" id="page-dashboard">
+      <h1>Dashboard</h1>
+      <p class="subtitle">Your Language College</p>
+      <div class="stats" id="dash-stats"></div>
+      <div class="card">
+        <h3>My students</h3>
+        <table>
+          <thead><tr><th>Name</th><th>Level</th><th>Topic</th><th>Grammar focus</th><th>Weekly usage</th><th>Status</th></tr></thead>
+          <tbody id="dash-students"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page" id="page-classes">
+      <h1>Classes</h1>
+      <p class="subtitle">4 classes at Your Language College</p>
+      <div class="card">
+        <table>
+          <thead><tr><th>Class</th><th>Teacher</th><th>Students</th></tr></thead>
+          <tbody id="classes-list"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page" id="page-classdetail">
+      <span class="crumb" data-nav="classes">&larr; Back to classes</span>
+      <div class="pagehead">
+        <div><h1 id="cd-name"></h1><p class="subtitle" id="cd-sub"></p></div>
+        <button class="btn" id="cd-addbtn">Add students</button>
+      </div>
+      <div id="cd-addpanel" style="display:none"></div>
+      <div class="card">
+        <h3>Set topics and grammar for class</h3>
+        <div class="fieldrow">
+          <div>
+            <div class="field"><label>Topics</label><div class="taginput" id="cd-topics"><input placeholder="Add a topic and press Enter"></div></div>
+          </div>
+          <div>
+            <div class="field"><label>Grammar focus</label><div class="taginput" id="cd-grammar"><input placeholder="Add a focus and press Enter"></div></div>
+          </div>
+        </div>
+        <button class="btn" id="cd-save">Save for class</button>
+        <div class="fieldnote">Applies to every student in this class who doesn't have an individual override set on their own profile.</div>
+      </div>
+      <div class="card">
+        <h3 id="cd-studentcount"></h3>
+        <table>
+          <thead><tr><th>Name</th><th>Topic</th><th>Grammar focus</th><th>Level</th><th>Status</th></tr></thead>
+          <tbody id="cd-students"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page" id="page-student">
+      <span class="crumb" id="st-back">&larr; Back</span>
+      <div class="pagehead">
+        <div><h1 id="st-name"></h1><p class="subtitle" id="st-sub"></p></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="pill usage" id="st-usage"></span>
+          <button class="btn outline sm" id="st-suspend"></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Topic and grammar focus</h3>
+        <div class="fieldnote" id="st-override-note" style="margin:0 0 12px"></div>
+        <div class="fieldrow">
+          <div><div class="field"><label>Topics</label><div class="taginput" id="st-topics"><input placeholder="Add a topic and press Enter"></div></div></div>
+          <div><div class="field"><label>Grammar focus</label><div class="taginput" id="st-grammar"><input placeholder="Add a focus and press Enter"></div></div></div>
+        </div>
+        <button class="btn" id="st-save">Save individual focus</button>
+      </div>
+
+      <div class="card">
+        <div class="genrow"><h3 style="margin:0">Learning summary</h3><span class="showlink" id="st-generate">Generate</span></div>
+        <div id="st-summary"></div>
+      </div>
+
+      <div class="card">
+        <h3>Call history</h3>
+        <table>
+          <thead><tr><th>Date</th><th>Duration</th><th>Topics</th><th></th></tr></thead>
+          <tbody id="st-calls"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page" id="page-teachers">
+      <h1>Manage teachers</h1>
+      <p class="subtitle">Create teacher and admin accounts.</p>
+      <div class="card">
+        <h3>Add teacher</h3>
+        <div class="fieldrow">
+          <div class="field"><label>Full name</label><input id="tc-name" placeholder="e.g. Priya Nair"></div>
+          <div class="field"><label>Email</label><input id="tc-email" placeholder="e.g. priya.nair@yourlanguagecollege.edu"></div>
+        </div>
+        <div class="field" style="max-width:260px"><label>Role</label>
+          <select id="tc-role"><option>Teacher</option><option>Admin</option></select>
+        </div>
+        <button class="btn" id="tc-create">Create account</button>
+      </div>
+      <div class="card">
+        <h3>Teachers</h3>
+        <table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody id="tc-list"></tbody></table>
+      </div>
+    </div>
+
+    <div class="page" id="page-settings">
+      <h1>Settings</h1>
+      <p class="subtitle">School information</p>
+      <div class="card">
+        <div class="fieldrow">
+          <div class="field"><label>School name</label><input value="Your Language College"></div>
+          <div class="field"><label>Weekly minutes per student</label><input value="140"></div>
+        </div>
+        <div class="field" style="max-width:340px">
+          <label>Student invite code</label>
+          <div style="display:flex;gap:8px">
+            <input value="YLC94" readonly style="flex:1">
+            <button class="btn outline sm" id="copy-code">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- feedback templates (reused across calls, "{name}" fills in) ---------------- */
+const FEEDBACK_TEMPLATES = [
+  { grammar:["[0:32] 'I go there yesterday' → 'I went there yesterday'","[2:10] 'she don't know' → 'she doesn't know'"],
+    vocab:["[1:05] Used a great range of descriptive words without hesitating."],
+    strengths:"Confident, natural pace throughout, and asked a follow-up question unprompted.",
+    focus:"Keep practising irregular past-tense verbs — a small, easily fixable pattern.",
+    transcript:[["Charly","Hi {name}, how's your week been?"],["{name}","Really good thanks, busy but good."],["Charly","Nice, tell me about the busiest part."]] },
+  { grammar:["[0:48] 'I have work there' → 'I have worked there'"],
+    vocab:["[3:20] Reached for a slightly formal word where a simpler one would do — easy fix."],
+    strengths:"Structured the answer clearly with a beginning, middle and end. Great turn-taking.",
+    focus:"Present perfect with 'for' and 'since' — coming along nicely.",
+    transcript:[["Charly","Let's talk about something you're proud of."],["{name}","I think finishing my project last month, it was hard."],["Charly","That's great — what was the hardest part?"]] },
+  { grammar:["None noted — a clean call."],
+    vocab:["[2:15] Used a slightly literal translation, but the meaning was still clear."],
+    strengths:"Strong narrative flow, good use of linking words like 'then' and 'after that'.",
+    focus:"Nothing urgent — keep building vocabulary range on this topic.",
+    transcript:[["Charly","Tell me about somewhere you'd like to visit."],["{name}","I want to go to Japan, for the food and the culture."],["Charly","What would you want to try first?"]] },
+  { grammar:["[1:14] 'depend' → 'it depends' (missing subject)"],
+    vocab:["[4:02] Hesitated briefly on a word, then self-corrected well."],
+    strengths:"Recovered smoothly from hesitation without losing the thread of the conversation.",
+    focus:"Small habit to build: give 'it' a job in short answers like 'it depends'.",
+    transcript:[["Charly","How often do you do that?"],["{name}","Depend, sometimes every day, sometimes not."],["Charly","Got it — what makes the difference?"]] },
+  { grammar:["[0:20] 'more better' → 'better'"],
+    vocab:["[5:40] Used an interesting idiom naturally — impressive for this level."],
+    strengths:"Genuinely enjoyable conversation, asked thoughtful follow-up questions throughout.",
+    focus:"One small comparative form to tidy up, otherwise very strong.",
+    transcript:[["Charly","Which do you prefer, and why?"],["{name}","I think this one is more better, honestly."],["Charly","Interesting — what tipped it for you?"]] },
+  { grammar:["[2:48] 'since three years' → 'for three years'"],
+    vocab:["[6:10] Vocabulary was accurate and varied throughout — no gaps noted."],
+    strengths:"Confident throughout with barely any hesitation. A pleasure to listen to.",
+    focus:"Just one preposition pattern to reinforce — 'for' with a length of time.",
+    transcript:[["Charly","How long have you been doing that?"],["{name}","Since three years now, I really enjoy it."],["Charly","That's a great habit to have."]] }
+];
+function fillTemplate(tpl, firstName){
+  return { grammar:tpl.grammar, vocab:tpl.vocab, strengths:tpl.strengths, focus:tpl.focus,
+    transcript: tpl.transcript.map(([who,line])=>[ who==='{name}'?firstName:who, line.replace(/\{name\}/g, firstName) ]) };
+}
+const DATE_POOL = ["11 August, 09:10","11 August, 17:20","10 August, 14:22","10 August, 16:05","9 August, 08:45","9 August, 19:12",
+  "8 August, 18:40","8 August, 12:05","7 August, 16:50","6 August, 15:10","6 August, 09:30","5 August, 16:05",
+  "4 August, 17:55","3 August, 18:20","2 August, 11:40","1 August, 16:30"];
+const DURATIONS = ["6:45","7:58","8:20","9:12","9:52","10:40","11:15","11:30","12:05","13:04","13:45","14:10"];
+
+/* ---------------- base student data ---------------- */
+const STUDENT_BASE = [
+  {id:'s1', name:'Amara Okafor', level:'B1', classId:'c2', override:false, topics:['Family','Travel'], grammar:['Past simple'], used:62, limit:140, status:'active', callCount:4,
+   summary:{ grammar:"Consistent with present tense but regularly drops endings on regular past-simple verbs and mixes up subject-verb agreement in negatives.",
+             vocab:"Comfortable with everyday family and travel topics, occasionally reaches for a direct translation instead of the natural phrase.",
+             strengths:"Confident and willing to elaborate without prompting, with strong narrative flow.",
+             progress:"Over 8 sessions, steady improvement in fluency. Past-simple accuracy is the clearest next target.", basedOn:8 } },
+  {id:'s2', name:'Diego Fernandez', level:'B2', classId:'c2', override:true, topics:['Job interviews'], grammar:['Present perfect'], used:88, limit:140, status:'active', callCount:4,
+   summary:{ grammar:"Present perfect is the clearest recurring gap, especially with 'for'/'since' and irregular participles. Occasional 'be' + adjective errors.",
+             vocab:"Strong professional vocabulary overall, with occasional literal translations around responsibility and roles.",
+             strengths:"Structured, confident answers with clear situation-task-result framing. Recovers well from self-corrections.",
+             progress:"Over 11 sessions, interview fluency has improved steadily. Present perfect accuracy is the highest-leverage next focus.", basedOn:11 } },
+  {id:'s3', name:'Mei Lin', level:'B1', classId:'c2', override:false, topics:['Hobbies','Food'], grammar:['Past simple'], used:15, limit:140, status:'active', callCount:3, summary:null},
+  {id:'s4', name:'Carla Ibanez', level:'A2', classId:'c2', override:false, topics:['Daily routine'], grammar:['Present simple'], used:40, limit:140, status:'active', callCount:3, summary:null},
+  {id:'s5', name:'Yusuf Demir', level:'B2', classId:'c3', override:true, topics:['Films','Sports'], grammar:['Past perfect'], used:0, limit:140, status:'suspended', callCount:2, summary:null},
+  {id:'s6', name:'Haruto Sato', level:'B2', classId:'c1', override:true, topics:['Travel','Culture'], grammar:['Conditionals'], used:130, limit:140, status:'active', callCount:5, summary:null},
+  {id:'s7', name:'Valentina Rossi', level:'B1', classId:'c3', override:false, topics:['Family','Work'], grammar:['Future forms'], used:22, limit:140, status:'active', callCount:3, summary:null},
+  {id:'s8', name:'Kenji Watanabe', level:'B2', classId:'c4', override:false, topics:['Technology'], grammar:['Present perfect'], used:5, limit:140, status:'active', callCount:2, summary:null},
+  {id:'s9', name:'Sofia Martins', level:'B1', classId:'c4', override:false, topics:['Weekend plans'], grammar:['Present continuous'], used:48, limit:140, status:'active', callCount:4, summary:null},
+  {id:'s10', name:'Lucas Silva', level:'A2', classId:'c1', override:false, topics:['Daily routine','Food'], grammar:['Present simple'], used:33, limit:140, status:'active', callCount:3, summary:null},
+  {id:'s11', name:'Aiko Tanaka', level:'B2', classId:'c4', override:false, topics:['Culture','Films'], grammar:['Past perfect'], used:76, limit:140, status:'active', callCount:4, summary:null},
+  {id:'s12', name:'Emre Yildiz', level:'B1', classId:'c3', override:false, topics:['Sports','Travel'], grammar:['Comparatives'], used:58, limit:140, status:'active', callCount:3, summary:null},
+  {id:'s13', name:'Noor Al-Sayed', level:'A2', classId:'c1', override:false, topics:['Family'], grammar:['Present simple'], used:19, limit:140, status:'active', callCount:2, summary:null},
+  {id:'s14', name:'Ananya Rao', level:'B2', classId:'c4', override:false, topics:['Job interviews','Technology'], grammar:['Present perfect'], used:95, limit:140, status:'active', callCount:5, summary:null},
+  {id:'s15', name:'Matteo Conti', level:'B1', classId:'c1', override:false, topics:['Travel','Food'], grammar:['Past simple'], used:41, limit:140, status:'active', callCount:3, summary:null},
+  {id:'s16', name:'Hana Kobayashi', level:'B2', classId:'c3', override:false, topics:['Culture','Work'], grammar:['Conditionals'], used:67, limit:140, status:'active', callCount:4, summary:null}
+];
+
+const STUDENTS = {};
+STUDENT_BASE.forEach((base, idx)=>{
+  const firstName = base.name.split(' ')[0];
+  const calls = [];
+  for(let i=0;i<base.callCount;i++){
+    const dateIdx = (idx*2 + i) % DATE_POOL.length;
+    const durIdx = (idx*3 + i) % DURATIONS.length;
+    const tplIdx = (idx + i) % FEEDBACK_TEMPLATES.length;
+    calls.push({ date: DATE_POOL[dateIdx], duration: DURATIONS[durIdx], topics: base.topics,
+                 feedback: fillTemplate(FEEDBACK_TEMPLATES[tplIdx], firstName) });
+  }
+  STUDENTS[base.id] = Object.assign({}, base, { calls });
+});
+
+const CLASSES = {
+  c1:{ name:'Beginners A', teacher:'Tom Candia', topics:['Weekend plans'], grammar:['Present simple'], studentIds:['s6','s10','s13','s15'] },
+  c2:{ name:'Intermediate B', teacher:'Tom Candia', topics:[], grammar:[], studentIds:['s1','s2','s3','s4'] },
+  c3:{ name:'Advanced C', teacher:'Mark Uddin', topics:['Current events'], grammar:['Reported speech'], studentIds:['s5','s7','s12','s16'] },
+  c4:{ name:'Evening group', teacher:'Mark Uddin', topics:['Free talk'], grammar:['Mixed review'], studentIds:['s8','s9','s11','s14'] }
+};
+
+let TEACHERS = [
+  { name:'Tom Candia', email:'tom.candia@yourlanguagecollege.edu', role:'Admin' },
+  { name:'Mark Uddin', email:'mark.uddin@yourlanguagecollege.edu', role:'Teacher' }
+];
+
+let currentStudentId = null, currentClassId = null;
+
+/* ---------------- helpers ---------------- */
+function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstChild; }
+function chips(list, cls){ return list.map(t=>`<span class="chip ${cls||''}">${t}</span>`).join(''); }
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),1600);
+}
+function usagePill(used,limit,status){
+  const off = status==='suspended';
+  return `<span class="pill usage ${off?'off':''}">${used} / ${limit} min</span>`;
+}
+function statusPill(status){
+  return status==='active' ? `<span class="pill active">Active</span>` : `<span class="pill suspended">Suspended</span>`;
+}
+
+/* ---------------- tag input widget ---------------- */
+function wireTagInput(containerId, list, grammarStyle){
+  const c = document.getElementById(containerId);
+  c.querySelectorAll('.chip').forEach(n=>n.remove());
+  const input = c.querySelector('input');
+  list.slice().reverse().forEach(t=>input.insertAdjacentElement('beforebegin', el(
+    `<span class="chip ${grammarStyle?'g':''}">${t}<span class="rm" data-rm="${t}">&times;</span></span>`
+  )));
+  input.value='';
+  input.onkeydown = e=>{
+    if(e.key==='Enter' && input.value.trim()){
+      list.push(input.value.trim());
+      wireTagInput(containerId, list, grammarStyle);
+    }
+  };
+  c.querySelectorAll('.rm').forEach(x=>x.onclick = ()=>{
+    const i=list.indexOf(x.dataset.rm); if(i>-1) list.splice(i,1);
+    wireTagInput(containerId, list, grammarStyle);
+  });
+}
+
+/* ---------------- render: dashboard ---------------- */
+function renderDashboard(){
+  const all = Object.values(STUDENTS);
+  const totalMin = all.reduce((s,x)=>s+x.used,0);
+  const atLimit = all.filter(x=>x.used>=x.limit).length;
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="stat"><b>${all.length}</b><span>students</span></div>
+    <div class="stat"><b>${totalMin}</b><span>minutes this week</span></div>
+    <div class="stat"><b>${atLimit}</b><span>at limit</span></div>`;
+  document.getElementById('dash-students').innerHTML = Object.entries(STUDENTS).map(([id,s])=>`
+    <tr class="clickable" data-goto-student="${id}" data-from="dashboard">
+      <td class="rowname">${s.name}</td><td>${s.level}</td>
+      <td>${chips(s.topics)}</td><td>${chips(s.grammar,'g')}</td>
+      <td>${usagePill(s.used,s.limit,s.status)}</td><td>${statusPill(s.status)}</td>
+    </tr>`).join('');
+}
+
+/* ---------------- render: classes list ---------------- */
+function renderClasses(){
+  document.getElementById('classes-list').innerHTML = Object.entries(CLASSES).map(([id,c])=>`
+    <tr class="clickable" data-goto-class="${id}">
+      <td class="rowname">${c.name}</td><td>${c.teacher}</td>
+      <td><span class="chip">${c.studentIds.length} students</span></td>
+    </tr>`).join('');
+}
+
+/* ---------------- render: class detail ---------------- */
+function renderClassDetail(id){
+  currentClassId = id;
+  const c = CLASSES[id];
+  document.getElementById('cd-name').textContent = c.name;
+  document.getElementById('cd-sub').textContent = c.teacher + ' · ' + c.studentIds.length + ' students';
+  document.getElementById('cd-studentcount').textContent = `Students (${c.studentIds.length})`;
+  wireTagInput('cd-topics', c.topics, false);
+  wireTagInput('cd-grammar', c.grammar, true);
+  document.getElementById('cd-students').innerHTML = c.studentIds.map(sid=>{
+    const s = STUDENTS[sid];
+    return `<tr class="clickable" data-goto-student="${sid}" data-from="classdetail">
+      <td class="rowname">${s.name}</td><td>${chips(s.topics)}</td><td>${chips(s.grammar,'g')}</td>
+      <td>${s.level}</td><td>${statusPill(s.status)}</td></tr>`;
+  }).join('');
+  document.getElementById('cd-addpanel').style.display='none';
+}
+document.getElementById('cd-save').onclick = ()=>{
+  const c = CLASSES[currentClassId];
+  c.studentIds.forEach(sid=>{
+    const s = STUDENTS[sid];
+    if(!s.override){ s.topics = c.topics.slice(); s.grammar = c.grammar.slice(); }
+  });
+  renderClassDetail(currentClassId);
+  toast('Saved — applied to every student without an individual override.');
+};
+document.getElementById('cd-addbtn').onclick = ()=>{
+  const panel = document.getElementById('cd-addpanel');
+  if(panel.style.display==='block'){ panel.style.display='none'; return; }
+  const c = CLASSES[currentClassId];
+  const available = Object.entries(STUDENTS).filter(([id])=>!c.studentIds.includes(id));
+  panel.innerHTML = `<div class="addpanel"><h3 style="margin-top:0">Add students to ${c.name}</h3>` +
+    available.map(([id,s])=>`<div class="addrow"><input type="checkbox" value="${id}" id="add-${id}"><label for="add-${id}">${s.name} &middot; ${s.level}</label></div>`).join('') +
+    `<div style="margin-top:14px"><button class="btn sm" id="cd-confirmadd">Add selected</button></div></div>`;
+  panel.style.display='block';
+  document.getElementById('cd-confirmadd').onclick = ()=>{
+    panel.querySelectorAll('input[type=checkbox]:checked').forEach(cb=>{
+      c.studentIds.push(cb.value); STUDENTS[cb.value].classId = currentClassId;
+    });
+    renderClassDetail(currentClassId);
+    toast('Students added to class.');
+  };
+};
+
+/* ---------------- render: student profile ---------------- */
+function renderStudent(id, from){
+  currentStudentId = id;
+  const s = STUDENTS[id];
+  document.getElementById('st-back').textContent = from==='classdetail' ? '← Back to class' : '← Back to dashboard';
+  document.getElementById('st-back').dataset.nav = from==='classdetail' ? 'classdetail' : 'dashboard';
+  document.getElementById('st-name').textContent = s.name;
+  document.getElementById('st-sub').textContent = `${s.level} · ${CLASSES[s.classId] ? CLASSES[s.classId].name : 'No class'}`;
+  document.getElementById('st-usage').textContent = `${s.used} / ${s.limit} min`;
+  document.getElementById('st-suspend').textContent = s.status==='active' ? 'Suspend' : 'Reactivate';
+  document.getElementById('st-override-note').textContent = s.override
+    ? 'This student has an individual override — class-wide saves will not change their focus.'
+    : 'This student is using the class default. Editing here will set an individual override.';
+  wireTagInput('st-topics', s.topics, false);
+  wireTagInput('st-grammar', s.grammar, true);
+
+  document.getElementById('st-calls').innerHTML = s.calls.length ? s.calls.map((call,i)=>`
+    <tr><td>${call.date}</td><td>${call.duration}</td><td>${chips(call.topics)}</td>
+      <td><span class="showlink" data-toggle-call="${i}">Show</span></td></tr>
+    <tr id="call-detail-${i}" style="display:none"><td colspan="4">
+      <div class="callrow-detail">
+        <div class="valuecallout">💡 <strong>This is the visibility no teacher has time to build by hand.</strong> Full feedback on every call, generated automatically — instead of you spending 15+ minutes reviewing each conversation yourself, for every student, every week.</div>
+        <div class="fbgrid">
+          <div class="fbbox gram"><div class="fbh">Grammar errors</div><div>${call.feedback.grammar.join('<br>')}</div></div>
+          <div class="fbbox vocab"><div class="fbh">Vocabulary gaps</div><div>${call.feedback.vocab.join('<br>')}</div></div>
+          <div class="fbbox str"><div class="fbh">Strengths</div><p>${call.feedback.strengths}</p></div>
+          <div class="fbbox next"><div class="fbh">Recommended focus</div><p>${call.feedback.focus}</p></div>
+        </div>
+        <div class="fbh" style="color:#9A968C;margin-bottom:6px">Transcript</div>
+        <div class="transcript">${call.feedback.transcript.map(([who,line])=>`<div><b>${who}:</b> ${line}</div>`).join('')}</div>
+      </div></td></tr>
+  `).join('') : `<tr><td colspan="4" style="color:var(--sub)">No calls yet.</td></tr>`;
+
+  document.querySelectorAll('[data-toggle-call]').forEach(link=>{
+    link.onclick = ()=>{
+      const row = document.getElementById('call-detail-'+link.dataset.toggleCall);
+      const showing = row.style.display==='table-row';
+      row.style.display = showing ? 'none' : 'table-row';
+      link.textContent = showing ? 'Show' : 'Hide';
+    };
+  });
+
+  const genBtn = document.getElementById('st-generate');
+  const box = document.getElementById('st-summary');
+  if(s.summary){
+    genBtn.textContent = 'Refresh';
+    box.innerHTML = renderSummaryHtml(s.summary);
+  } else {
+    genBtn.textContent = 'Generate';
+    box.innerHTML = `<div class="placeholder">Click generate to summarise this student's progress across recent calls.</div>`;
+  }
+  genBtn.onclick = ()=>{
+    box.innerHTML = `<div class="placeholder">Generating…</div>`;
+    setTimeout(()=>{
+      if(!s.summary){
+        s.summary = { grammar:'A handful of small, consistent patterns rather than random mistakes — a good early sign.',
+                       vocab:'Vocabulary use is already appropriate for the level, with nothing recurring to flag yet.',
+                       strengths:'Willing to attempt full sentences and keep the conversation moving rather than giving one-word answers.',
+                       progress:`Based on ${s.calls.length} call${s.calls.length===1?'':'s'} so far — a solid start.`, basedOn:s.calls.length };
+      }
+      box.innerHTML = renderSummaryHtml(s.summary);
+      genBtn.textContent = 'Refresh';
+    }, 1000);
+  };
+}
+function renderSummaryHtml(sum){
+  return `<div class="sumgrid">
+    <div class="sumbox gram"><div class="fbh">Grammar</div><p>${sum.grammar}</p></div>
+    <div class="sumbox vocab"><div class="fbh">Vocabulary</div><p>${sum.vocab}</p></div>
+    <div class="sumbox str"><div class="fbh">Strengths</div><p>${sum.strengths}</p></div>
+    <div class="sumbox prog"><div class="fbh">Overall progress</div><p>${sum.progress}</p></div>
+  </div><div class="fieldnote">Based on the last ${sum.basedOn} call${sum.basedOn===1?'':'s'}.</div>`;
+}
+document.getElementById('st-save').onclick = ()=>{
+  STUDENTS[currentStudentId].override = true;
+  renderStudent(currentStudentId, document.getElementById('st-back').dataset.nav);
+  toast('Saved as an individual override.');
+};
+document.getElementById('st-suspend').onclick = ()=>{
+  const s = STUDENTS[currentStudentId];
+  s.status = s.status==='active' ? 'suspended' : 'active';
+  renderStudent(currentStudentId, document.getElementById('st-back').dataset.nav);
+  toast(s.status==='active' ? 'Student reactivated.' : 'Student suspended.');
+};
+
+/* ---------------- render: teachers ---------------- */
+function renderTeachers(){
+  document.getElementById('tc-list').innerHTML = TEACHERS.map(t=>
+    `<tr><td class="rowname">${t.name}</td><td>${t.email}</td><td>${t.role}</td></tr>`).join('');
+}
+document.getElementById('tc-create').onclick = ()=>{
+  const name = document.getElementById('tc-name').value.trim();
+  const email = document.getElementById('tc-email').value.trim();
+  const role = document.getElementById('tc-role').value;
+  if(!name || !email){ toast('Enter a name and email first.'); return; }
+  TEACHERS.push({ name, email, role });
+  document.getElementById('tc-name').value=''; document.getElementById('tc-email').value='';
+  renderTeachers();
+  toast('Teacher account created — invite sent to ' + email);
+};
+
+/* ---------------- settings ---------------- */
+document.getElementById('copy-code').onclick = ()=>{
+  navigator.clipboard?.writeText('YLC94').catch(()=>{});
+  toast('Invite code copied.');
+};
+
+/* ---------------- navigation ---------------- */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.navitem[data-nav]').forEach(n=>n.classList.remove('active'));
+  const navKey = (name==='classdetail') ? 'classes' : (name==='student' ? (CLASSES[STUDENTS[currentStudentId]?.classId] ? 'classes' : 'dashboard') : name);
+  const navEl = document.querySelector(`.navitem[data-nav="${navKey}"]`);
+  if(navEl) navEl.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+document.getElementById('app').addEventListener('click', e=>{
+  const nav = e.target.closest('[data-nav]');
+  const gs = e.target.closest('[data-goto-student]');
+  const gc = e.target.closest('[data-goto-class]');
+  if(gs){ renderStudent(gs.dataset.gotoStudent, gs.dataset.from); showPage('student'); return; }
+  if(gc){ renderClassDetail(gc.dataset.gotoClass); showPage('classdetail'); return; }
+  if(nav){ const target = nav.dataset.nav;
+    if(target==='dashboard') renderDashboard();
+    if(target==='classes') renderClasses();
+    if(target==='classdetail') renderClassDetail(currentClassId);
+    if(target==='teachers') renderTeachers();
+    showPage(target); }
+});
+
+/* ---------------- init ---------------- */
+renderDashboard(); renderClasses(); renderTeachers();
+showPage('dashboard');
+</script>
+</body>
+</html>
