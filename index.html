@@ -92,6 +92,13 @@
   .hero-bg {
     position: absolute;
     inset: 0;
+    /* Decorative radial gradients only — must never capture clicks.
+       Without pointer-events: none the absolute-positioned .hero-bg
+       paints in CSS group 6 (positioned + z-index auto) which is
+       ABOVE non-positioned block descendants like .hero-section-nav,
+       and intercepts every click over its area even though it looks
+       transparent. */
+    pointer-events: none;
     background:
       radial-gradient(ellipse 80% 60% at 50% 0%, rgba(45,27,105,0.15) 0%, transparent 70%),
       radial-gradient(ellipse 50% 40% at 80% 80%, rgba(232,93,155,0.12) 0%, transparent 60%),
@@ -755,10 +762,15 @@
   /* HERO SECTION NAV (jumps to page sections) */
   /* The wrapper reserves layout space so the bar going .pinned (fixed)
      doesn't collapse the space it used to occupy. min-height is set in
-     JS at load time to match the bar's actual rendered height. */
+     JS at load time to match the bar's actual rendered height.
+     position:relative + z-index:1 belt-and-braces the paint order so
+     any future decorative absolute inside .hero can't recreate the
+     bug where the bar became un-clickable (see .hero-bg comment). */
   .hero-section-nav-wrapper {
     width: 100%;
     margin-top: 1.75rem;
+    position: relative;
+    z-index: 1;
   }
 
   .hero-section-nav {
