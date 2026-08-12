@@ -752,6 +752,112 @@
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
 
+  /* HERO SECTION NAV (jumps to page sections) */
+  /* The wrapper reserves layout space so the bar going .pinned (fixed)
+     doesn't collapse the space it used to occupy. min-height is set in
+     JS at load time to match the bar's actual rendered height. */
+  .hero-section-nav-wrapper {
+    width: 100%;
+    margin-top: 1.75rem;
+  }
+
+  .hero-section-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 2.5rem;
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.65rem 2rem;
+    border-radius: 100px;
+    background: linear-gradient(135deg, var(--purple) 0%, #6B35B0 60%, var(--pink-dark) 100%);
+    box-shadow: 0 4px 20px rgba(45,27,105,0.25);
+  }
+
+  /* Pinned state: applied by the scroll listener once the bar's
+     original position scrolls out of view. Fixed to the viewport,
+     centred, and sitting below the site header (which uses z-index
+     100 and ~4rem height). */
+  .hero-section-nav.pinned {
+    position: fixed;
+    top: 4.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+  }
+
+  .hero-section-nav a {
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 0.25rem 0.4rem;
+    transition: color 0.15s;
+  }
+
+  .hero-section-nav a:hover { color: #fff; }
+
+  /* TEACHER-PORTAL CTA PAIR (inside .teachers-section) */
+  .teachers-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 3rem;
+  }
+
+  .teachers-cta-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .teachers-cta-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .teachers-cta-divider {
+    width: 1px;
+    height: 3.25rem;
+    background: rgba(255,255,255,0.2);
+  }
+
+  /* Outlined-white variant of btn-primary — same footprint so the two
+     options read as a matched pair, one filled (primary) one outlined
+     (secondary), rather than one CTA + one afterthought link. */
+  .btn-outline-white {
+    display: inline-block;
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    background: transparent;
+    padding: 0.9rem 2.2rem;
+    border-radius: 100px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+
+  .btn-outline-white:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.85);
+    transform: translateY(-2px);
+  }
+
+  /* Anchor targets — offset from the fixed top nav so headings don't
+     hide underneath it on smooth-scroll. */
+  section[id],
+  div[id].teachers-wrapper {
+    scroll-margin-top: 5rem;
+  }
+
   /* SEE IT IN ACTION (demo video) */
   .demo-section {
     max-width: 900px;
@@ -780,6 +886,12 @@
     footer { flex-direction: column; gap: 1rem; text-align: center; }
     .teachers-wrapper { padding: 0 1rem; }
     .demo-video { border-radius: 16px; margin-top: 2rem; }
+    .hero-section-nav-wrapper { margin-top: 1.25rem; }
+    .hero-section-nav { gap: 0.3rem 1rem; padding: 0.5rem 1rem; }
+    .hero-section-nav a { font-size: 0.78rem; padding: 0.2rem 0.3rem; }
+    .hero-section-nav.pinned { top: 3.75rem; }
+    .teachers-cta { flex-direction: column; gap: 1.75rem; }
+    .teachers-cta-divider { display: none; }
   }
 </style>
 </head>
@@ -809,6 +921,16 @@
     <a href="https://play.google.com/store/apps/details?id=io.callcharly.app&pcampaignid=web_share" target="_blank" rel="noopener">
       <img src="/google-play-badge.png" alt="Get it on Google Play" />
     </a>
+  </div>
+
+  <div class="hero-section-nav-wrapper">
+    <div id="heroSectionNav" class="hero-section-nav" role="navigation" aria-label="Page sections">
+      <a href="#demo">Watch demo</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#for-teachers">For teachers</a>
+      <a href="#for-students">For students</a>
+      <a href="#get-started">Get started</a>
+    </div>
   </div>
 
   <div class="hero-visual">
@@ -866,7 +988,7 @@
 </div>
 
 <!-- SEE IT (demo video) -->
-<section class="demo-section">
+<section id="demo" class="demo-section">
   <span class="section-tag reveal">See it in action</span>
   <h2 class="section-title reveal reveal-delay-1">A minute with Charly.</h2>
   <p class="section-lead reveal reveal-delay-2">How a call works, and what students get afterwards.</p>
@@ -882,7 +1004,7 @@
 </section>
 
 <!-- HOW IT WORKS -->
-<section>
+<section id="how-it-works">
   <span class="section-tag reveal">How it works</span>
   <h2 class="section-title reveal reveal-delay-1">Practice English anywhere,<br>anytime.</h2>
   <p class="section-lead reveal reveal-delay-2">Students open the Charly app and start a real conversation. No scripts, no multiple choice, just natural spoken English with an AI that listens, responds, and gently improves their language along the way.</p>
@@ -914,7 +1036,7 @@
 </section>
 
 <!-- FOR TEACHERS -->
-<div class="teachers-wrapper">
+<div id="for-teachers" class="teachers-wrapper">
   <div class="teachers-section reveal">
     <span class="section-tag" style="color: var(--pink-light);">For teachers</span>
     <h2 class="section-title">Everything you need to<br>track real progress.</h2>
@@ -966,14 +1088,26 @@
       </div>
     </div>
 
-    <a href="https://portal.callcharly.io" class="portal-link">
-      Visit the teacher portal &rarr;
-    </a>
+    <div class="teachers-cta">
+      <div class="teachers-cta-option">
+        <div class="teachers-cta-label">New here?</div>
+        <a href="/portal-demo" target="_blank" rel="noopener" class="btn-primary">
+          See a demo &rarr;
+        </a>
+      </div>
+      <div class="teachers-cta-divider" aria-hidden="true"></div>
+      <div class="teachers-cta-option">
+        <div class="teachers-cta-label">Already onboarded?</div>
+        <a href="https://portal.callcharly.io" class="btn-outline-white">
+          Log in to your portal &rarr;
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- FOR STUDENTS -->
-<section>
+<section id="for-students">
   <div class="students-grid">
     <div>
       <span class="section-tag reveal">For students</span>
@@ -1013,7 +1147,7 @@
 </section>
 
 <!-- CTA -->
-<section class="cta-section">
+<section id="get-started" class="cta-section">
   <div class="cta-bg"></div>
   <span class="section-tag reveal">Get started</span>
   <h2 class="section-title reveal reveal-delay-1">Bring consistent English practice to your students.</h2>
@@ -1069,6 +1203,46 @@
     const el = document.getElementById('call-timer');
     if (el) el.textContent = m + ':' + s;
   }, 1000);
+
+  // Pin the hero section-nav to the top of the viewport once the user
+  // has scrolled past its original position in the hero. Before that,
+  // it sits in normal document flow between the app badges and the
+  // phone mockup. The wrapper's min-height reserves the layout slot so
+  // pinning doesn't cause a jump.
+  (function initStickyHeroNav() {
+    const bar = document.getElementById('heroSectionNav');
+    if (!bar) return;
+    const wrapper = bar.parentElement;
+    // Match the CSS `.hero-section-nav.pinned { top: 4.5rem }` above
+    // the site-header height (~4rem). Mobile override drops to 3.75rem
+    // to match the CSS media-query rule.
+    const pinnedTopRem = () => (window.matchMedia('(max-width: 768px)').matches ? 3.75 : 4.5);
+    const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    let threshold = 0;
+
+    const measure = () => {
+      // Reserve the exact height the bar occupies so the pin doesn't
+      // cause a layout shift when it transitions to fixed.
+      const wasPinned = bar.classList.contains('pinned');
+      if (wasPinned) bar.classList.remove('pinned');
+      wrapper.style.minHeight = bar.getBoundingClientRect().height + 'px';
+      threshold = wrapper.getBoundingClientRect().top + window.scrollY - (pinnedTopRem() * remPx);
+      if (wasPinned) bar.classList.add('pinned');
+    };
+
+    const onScroll = () => {
+      if (window.scrollY >= threshold) {
+        bar.classList.add('pinned');
+      } else {
+        bar.classList.remove('pinned');
+      }
+    };
+
+    measure();
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => { measure(); onScroll(); });
+  })();
 </script>
 </body>
 </html>
