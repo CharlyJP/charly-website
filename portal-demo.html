@@ -170,8 +170,19 @@
 
     <div class="page" id="page-classes">
       <h1>Classes</h1>
-      <p class="subtitle">4 classes at Your Language College</p>
+      <p class="subtitle" id="classes-subtitle">4 classes at Your Language College</p>
       <div class="card">
+        <h3>Create new class</h3>
+        <div class="fieldrow">
+          <div class="field"><label>Class name</label><input id="nc-name" placeholder="e.g. Beginner A"></div>
+          <div class="field"><label>Teacher</label>
+            <select id="nc-teacher"><option value="">Select teacher...</option></select>
+          </div>
+        </div>
+        <button class="btn" id="nc-create">Create</button>
+      </div>
+      <div class="card">
+        <h3>All classes</h3>
         <table>
           <thead><tr><th>Class</th><th>Teacher</th><th>Students</th></tr></thead>
           <tbody id="classes-list"></tbody>
@@ -462,12 +473,31 @@ function renderDashboard(){
 
 /* ---------------- render: classes list ---------------- */
 function renderClasses(){
+  const count = Object.keys(CLASSES).length;
+  document.getElementById('classes-subtitle').textContent = `${count} class${count===1?'':'es'} at Your Language College`;
   document.getElementById('classes-list').innerHTML = Object.entries(CLASSES).map(([id,c])=>`
     <tr class="clickable" data-goto-class="${id}">
       <td class="rowname">${c.name}</td><td>${c.teacher}</td>
       <td><span class="chip">${c.studentIds.length} students</span></td>
     </tr>`).join('');
+  const sel = document.getElementById('nc-teacher');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">Select teacher...</option>' +
+    TEACHERS.map(t=>`<option value="${t.name}">${t.name}</option>`).join('');
+  sel.value = current;
 }
+document.getElementById('nc-create').onclick = ()=>{
+  const name = document.getElementById('nc-name').value.trim();
+  const teacher = document.getElementById('nc-teacher').value;
+  if(!name || !teacher){ toast('Enter a class name and pick a teacher first.'); return; }
+  let n = 1; while(CLASSES['c'+ (Object.keys(CLASSES).length + n)]) n++;
+  const newId = 'newclass' + Date.now();
+  CLASSES[newId] = { name, teacher, topics:[], grammar:[], studentIds:[] };
+  document.getElementById('nc-name').value = '';
+  document.getElementById('nc-teacher').value = '';
+  renderClasses();
+  toast(`${name} created.`);
+};
 
 /* ---------------- render: class detail ---------------- */
 function renderClassDetail(id){
