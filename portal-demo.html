@@ -279,7 +279,7 @@
       <div class="card">
         <div class="fieldrow">
           <div class="field"><label>School name</label><input value="Your Language College"></div>
-          <div class="field"><label>Weekly minutes per student</label><input value="140"></div>
+          <div class="field"><label>Weekly minutes per student</label><input value="100"></div>
         </div>
         <div class="field" style="max-width:340px">
           <label>Student invite code</label>
@@ -362,30 +362,30 @@ const DURATIONS = ["6:45","7:58","8:20","9:12","9:52","10:40","11:15","11:30","1
 
 /* ---------------- base student data ---------------- */
 const STUDENT_BASE = [
-  {id:'s1', name:'Amara Okafor', level:'B1', classId:'c2', override:false, topics:['Family','Travel'], grammar:['Past simple'], used:62, limit:140, status:'active', callCount:8,
+  {id:'s1', name:'Amara Okafor', level:'B1', classId:'c2', override:false, topics:['Family','Travel'], grammar:['Past simple'], used:62, limit:100, status:'active', callCount:8,
    summary:{ grammar:"Amara is consistent with present tense and simple sentence structure, but regularly drops the '-ed' ending on regular past-simple verbs ('I go' instead of 'I went') and mixes up subject-verb agreement in negative statements ('she don't like' instead of 'she doesn't like'). These are the two clearest, most repeated patterns across recent calls, rather than a broad grammar gap, everything else in her sentence structure is solid for the level.",
              vocab:"Comfortable and fluent with everyday family and travel topics, and has a genuinely wide working vocabulary for describing people, routines and places. She occasionally reaches for a direct translation from her first language instead of the natural English phrase ('touristic' instead of 'popular with tourists'), but these moments are rare and never block understanding, Charly is able to note them as light vocabulary-building opportunities rather than corrections.",
              strengths:"Confident and willing to elaborate without being prompted, with a strong narrative flow when telling stories, she naturally uses sequencing language like 'first', 'then' and 'after that' to structure longer answers. She also recovers smoothly from small mistakes mid-sentence without losing her train of thought, which is a genuinely advanced conversational skill many learners take much longer to develop.",
              progress:"Over 8 sessions, Amara has shown steady, measurable improvement in overall fluency and confidence, speaking for longer stretches with fewer pauses each week. Past-simple accuracy on regular verbs remains the single clearest next target, everything else is tracking well above where a typical B1 speaker would be at this stage, and she's a strong candidate to move toward B2-level material soon.", basedOn:8 } },
-  {id:'s2', name:'Diego Fernandez', level:'B2', classId:'c2', override:true, topics:['Job interviews'], grammar:['Present perfect'], used:88, limit:140, status:'active', callCount:11,
+  {id:'s2', name:'Diego Fernandez', level:'B2', classId:'c2', override:true, topics:['Job interviews'], grammar:['Present perfect'], used:88, limit:100, status:'active', callCount:11,
    summary:{ grammar:"Present perfect is Diego's clearest recurring gap, especially around 'for' and 'since' with time periods, and irregular past participles like 'gone', 'seen' and 'done'. There's also an occasional 'be' + adjective pattern ('I am agree' instead of 'I agree') that shows up under pressure, typically early in a call before he settles in. None of these affect how clearly he communicates, they're the kind of precise, fixable patterns that come up specifically in interview-style speaking.",
              vocab:"Strong, genuinely professional vocabulary overall, he's comfortable discussing responsibilities, achievements and workplace situations with real precision. The only recurring gap is an occasional literal translation around responsibility and roles ('responsible of' instead of 'responsible for'), which Charly has now flagged consistently enough across multiple calls that it's become a clear, specific coaching point rather than a one-off.",
              strengths:"Structures answers clearly using a situation-task-result pattern that would serve him well in a real interview, and recovers smoothly and quickly after self-correcting mid-sentence without losing his composure or train of thought. He also handles follow-up questions confidently rather than sticking rigidly to a rehearsed answer, which is exactly the skill interview practice is meant to build.",
              progress:"Over 11 sessions, Diego's interview fluency has improved steadily and noticeably, his answers have become longer, better organised, and more naturally delivered with each passing week. Present perfect accuracy with 'for' and 'since' is now the single highest-leverage focus remaining; everything else in his interview technique is at a genuinely strong, near-native level of confidence.", basedOn:11 } },
-  {id:'s3', name:'Mei Lin', level:'B1', classId:'c2', override:false, topics:['Hobbies','Food'], grammar:['Past simple'], used:15, limit:140, status:'active', callCount:6, summary:null},
-  {id:'s4', name:'Carla Ibanez', level:'A2', classId:'c2', override:false, topics:['Daily routine'], grammar:['Present simple'], used:40, limit:140, status:'active', callCount:5, summary:null},
-  {id:'s5', name:'Yusuf Demir', level:'B2', classId:'c3', override:true, topics:['Films','Sports'], grammar:['Past perfect'], used:0, limit:140, status:'suspended', callCount:4, summary:null},
-  {id:'s6', name:'Haruto Sato', level:'B2', classId:'c1', override:true, topics:['Travel','Culture'], grammar:['Conditionals'], used:130, limit:140, status:'active', callCount:9, summary:null},
-  {id:'s7', name:'Valentina Rossi', level:'B1', classId:'c3', override:false, topics:['Family','Work'], grammar:['Future forms'], used:22, limit:140, status:'active', callCount:6, summary:null},
-  {id:'s8', name:'Kenji Watanabe', level:'B2', classId:'c4', override:false, topics:['Technology'], grammar:['Present perfect'], used:5, limit:140, status:'active', callCount:5, summary:null},
-  {id:'s9', name:'Sofia Martins', level:'B1', classId:'c4', override:false, topics:['Weekend plans'], grammar:['Present continuous'], used:48, limit:140, status:'active', callCount:7, summary:null},
-  {id:'s10', name:'Lucas Silva', level:'A2', classId:'c1', override:false, topics:['Daily routine','Food'], grammar:['Present simple'], used:33, limit:140, status:'active', callCount:5, summary:null},
-  {id:'s11', name:'Aiko Tanaka', level:'B2', classId:'c4', override:false, topics:['Culture','Films'], grammar:['Past perfect'], used:76, limit:140, status:'active', callCount:8, summary:null},
-  {id:'s12', name:'Emre Yildiz', level:'B1', classId:'c3', override:false, topics:['Sports','Travel'], grammar:['Comparatives'], used:58, limit:140, status:'active', callCount:6, summary:null},
-  {id:'s13', name:'Noor Al-Sayed', level:'A2', classId:'c1', override:false, topics:['Family'], grammar:['Present simple'], used:19, limit:140, status:'active', callCount:4, summary:null},
-  {id:'s14', name:'Ananya Rao', level:'B2', classId:'c4', override:false, topics:['Job interviews','Technology'], grammar:['Present perfect'], used:95, limit:140, status:'active', callCount:9, summary:null},
-  {id:'s15', name:'Matteo Conti', level:'B1', classId:'c1', override:false, topics:['Travel','Food'], grammar:['Past simple'], used:41, limit:140, status:'active', callCount:6, summary:null},
-  {id:'s16', name:'Hana Kobayashi', level:'B2', classId:'c3', override:false, topics:['Culture','Work'], grammar:['Conditionals'], used:67, limit:140, status:'active', callCount:7, summary:null}
+  {id:'s3', name:'Mei Lin', level:'B1', classId:'c2', override:false, topics:['Hobbies','Food'], grammar:['Past simple'], used:15, limit:100, status:'active', callCount:6, summary:null},
+  {id:'s4', name:'Carla Ibanez', level:'A2', classId:'c2', override:false, topics:['Daily routine'], grammar:['Present simple'], used:40, limit:100, status:'active', callCount:5, summary:null},
+  {id:'s5', name:'Yusuf Demir', level:'B2', classId:'c3', override:true, topics:['Films','Sports'], grammar:['Past perfect'], used:0, limit:100, status:'suspended', callCount:4, summary:null},
+  {id:'s6', name:'Haruto Sato', level:'B2', classId:'c1', override:true, topics:['Travel','Culture'], grammar:['Conditionals'], used:93, limit:100, status:'active', callCount:9, summary:null},
+  {id:'s7', name:'Valentina Rossi', level:'B1', classId:'c3', override:false, topics:['Family','Work'], grammar:['Future forms'], used:22, limit:100, status:'active', callCount:6, summary:null},
+  {id:'s8', name:'Kenji Watanabe', level:'B2', classId:'c4', override:false, topics:['Technology'], grammar:['Present perfect'], used:5, limit:100, status:'active', callCount:5, summary:null},
+  {id:'s9', name:'Sofia Martins', level:'B1', classId:'c4', override:false, topics:['Weekend plans'], grammar:['Present continuous'], used:48, limit:100, status:'active', callCount:7, summary:null},
+  {id:'s10', name:'Lucas Silva', level:'A2', classId:'c1', override:false, topics:['Daily routine','Food'], grammar:['Present simple'], used:33, limit:100, status:'active', callCount:5, summary:null},
+  {id:'s11', name:'Aiko Tanaka', level:'B2', classId:'c4', override:false, topics:['Culture','Films'], grammar:['Past perfect'], used:76, limit:100, status:'active', callCount:8, summary:null},
+  {id:'s12', name:'Emre Yildiz', level:'B1', classId:'c3', override:false, topics:['Sports','Travel'], grammar:['Comparatives'], used:58, limit:100, status:'active', callCount:6, summary:null},
+  {id:'s13', name:'Noor Al-Sayed', level:'A2', classId:'c1', override:false, topics:['Family'], grammar:['Present simple'], used:19, limit:100, status:'active', callCount:4, summary:null},
+  {id:'s14', name:'Ananya Rao', level:'B2', classId:'c4', override:false, topics:['Job interviews','Technology'], grammar:['Present perfect'], used:95, limit:100, status:'active', callCount:9, summary:null},
+  {id:'s15', name:'Matteo Conti', level:'B1', classId:'c1', override:false, topics:['Travel','Food'], grammar:['Past simple'], used:41, limit:100, status:'active', callCount:6, summary:null},
+  {id:'s16', name:'Hana Kobayashi', level:'B2', classId:'c3', override:false, topics:['Culture','Work'], grammar:['Conditionals'], used:67, limit:100, status:'active', callCount:7, summary:null}
 ];
 
 const STUDENTS = {};
