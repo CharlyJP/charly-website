@@ -164,17 +164,19 @@
     <li>Conversation transcripts generated from those conversations</li>
     <li>Usage data: call timestamps, call duration, weekly minutes used, and call history</li>
     <li>Account status records: when a student was approved, suspended, reactivated, or removed by their School</li>
+    <li>Subscription status for students who subscribe directly: whether a subscription is active and when it expires</li>
     <li>Feedback and learning data: AI-generated feedback reports and summarised facts about a student's progress used to personalise future conversations</li>
   </ul>
-  <p>We do not deliberately collect sensitive personal information (such as health, racial, or religious information), and students are not asked to provide it. Students may nonetheless mention such information during free conversation. We ask students not to share sensitive personal information during practice, and we limit how long we retain conversation data (see section 9).</p>
+  <p>We do not deliberately collect sensitive personal information (such as health, racial, or religious information), and students are not asked to provide it. Students may nonetheless mention such information during free conversation. We ask students not to share sensitive personal information during practice, and we limit how long we retain conversation data (see section 10).</p>
 
   <h2>3. How We Collect It</h2>
   <p>Students register themselves directly through the App using an invite code provided by their School. When a student registers, they provide their own account information (name and email address) and set a password. Before they can use the App, they must actively agree to the recording and processing of their practice calls.</p>
+  <p>Some students use Charly without a school. These students register directly in the App, confirm that they are 18 or over, and take out a subscription to use the service. They are not enrolled by a school, no teacher has access to their recordings, transcripts or feedback, and no school can approve, suspend or remove their account.</p>
   <p>Teachers and School administrators use the Portal to set each student's learning settings (topics, grammar focus, and level) and to manage student accounts, including approving, suspending, reactivating, and removing students. Schools provide their own staff account details and manage enrolment using their invite code.</p>
   <p>Voice recordings, transcripts, usage data, AI-generated feedback, and the summarised learning data used to personalise future conversations are all generated automatically when a student uses the App to make a call. Records of account status changes are created automatically when a School approves, suspends, reactivates, or removes a student.</p>
 
   <h2>4. Voice Recordings and AI Processing</h2>
-  <p>A core part of our service involves recording students' spoken conversations with the AI Partner and processing them using automated AI systems. Each call is recorded, transcribed into text, and analysed by an AI language model to generate feedback and progress summaries. Recordings and transcripts are stored securely and made available to authorised staff of the relevant School through the Portal. We retain recordings and transcripts for a limited period only (see section 9).</p>
+  <p>A core part of our service involves recording students' spoken conversations with the AI Partner and processing them using automated AI systems. Each call is recorded, transcribed into text, and analysed by an AI language model to generate feedback and progress summaries. Recordings and transcripts are stored securely and made available to authorised staff of the relevant School through the Portal. We retain recordings and transcripts for a limited period only (see section 10).</p>
   <p>Students are informed at the point of registration, through a privacy collection notice, that their practice calls are recorded and processed to generate feedback, and they must actively agree to this before they can use the App. We retain a record of this consent.</p>
 
   <h2>5. Why We Collect and Use It</h2>
@@ -184,7 +186,7 @@
     <li>Generate transcripts and feedback reports for teachers</li>
     <li>Personalise conversations using a student's level, focus areas, and past conversation history</li>
     <li>Manage School accounts and student enrolment</li>
-    <li>Calculate and issue billing to Schools, which requires us to keep a record of when each student's account was active</li>
+    <li>Calculate and issue billing to Schools, which requires us to keep a record of when each student's account was active, and manage subscriptions for students who subscribe directly</li>
     <li>Maintain, secure, and improve the Platform</li>
     <li>Communicate with Schools about their account and the service</li>
   </ul>
@@ -194,8 +196,14 @@
   <h2>6. Students Must Be Adults (18+)</h2>
   <p>The Platform is intended for use by students aged 18 years and over only. Schools are responsible for ensuring that only students aged 18 or over are given access to the Platform using their invite code.</p>
   <p>Students create their own accounts in the App using their School's invite code, and their School approves and manages their access through the Portal. We do not enrol students in courses or verify their age; we rely on Schools to do so.</p>
+  <p>Students who register directly without a school must confirm that they are 18 or over before they can create an account. We rely on that confirmation.</p>
 
-  <h2>7. Third-Party Service Providers</h2>
+  <h2>7. Payments and Subscriptions</h2>
+  <p>Students who subscribe directly pay through the app store on their device, either the Apple App Store or Google Play. Payment is handled entirely by Apple or Google. We never receive, see or store payment card details or bank details.</p>
+  <p>We use RevenueCat to manage subscription status. RevenueCat receives a pseudonymous identifier for the student's account and the purchase information supplied by Apple or Google, so that we can tell whether a subscription is active. RevenueCat does not receive names, email addresses, recordings, transcripts or feedback.</p>
+  <p>Subscriptions renew automatically until cancelled. Cancellation and refunds are handled by Apple or Google through the device's subscription settings, not by us.</p>
+
+  <h2>8. Third-Party Service Providers</h2>
   <p>To deliver the Platform, we share limited information with the following third-party providers, who process data on our behalf:</p>
   <ul>
     <li><strong>ElevenLabs</strong> (voice AI): receives students' speech in real time during a call to enable the conversation, and produces the recording and transcript. United States.</li>
@@ -203,42 +211,45 @@
     <li><strong>Supabase</strong> (database, authentication, and file storage): stores student accounts, recordings, and transcripts. Our instance is hosted in Australia.</li>
     <li><strong>Railway and Vercel</strong> (application hosting): run our backend and web applications. United States.</li>
     <li><strong>Resend</strong> (email delivery): sends account and service-related emails. United States.</li>
+    <li><strong>RevenueCat</strong> (subscription management): receives a pseudonymous account identifier and app store purchase information. United States.</li>
   </ul>
   <p>These providers are engaged by us to process data only for the purposes of delivering our service, and are subject to security and confidentiality obligations under their agreements with us.</p>
   <p>Where personal information is disclosed to a provider that stores or processes data outside Australia, we rely on contractual commitments in our agreements with those providers requiring them to protect personal information to a standard consistent with the Australian Privacy Principles.</p>
 
-  <h2>8. Storage and Security</h2>
+  <h2>9. Storage and Security</h2>
   <p>We take reasonable steps to protect personal information from misuse, interference, loss, and unauthorised access, modification, or disclosure. These steps include:</p>
   <ul>
     <li>Storing student recordings, transcripts, and account data in Australia, with a reputable cloud provider that maintains recognised security practices</li>
     <li>Restricting access to student recordings, transcripts, and feedback to authorised staff of the relevant School</li>
     <li>Controlling and limiting administrative access to the Platform</li>
-    <li>Automatically deleting recordings, transcripts, feedback and learning data after a defined retention period (see section 9), so that we do not hold personal information longer than we need it</li>
+    <li>Automatically deleting recordings, transcripts, feedback and learning data after a defined retention period (see section 10), so that we do not hold personal information longer than we need it</li>
   </ul>
   <p>No method of transmission or storage is completely secure. While we take the steps described above to protect personal information, we cannot guarantee absolute security.</p>
 
-  <h2>9. Data Retention and Deletion</h2>
+  <h2>10. Data Retention and Deletion</h2>
   <p>We retain personal information only for as long as we need it.</p>
   <p>Recordings, transcripts, AI-generated feedback, and the learning data used to personalise conversations are automatically deleted 120 days after the conversation takes place, regardless of whether the student is still enrolled.</p>
   <p>When a student is removed from a School, their personal information, including their account details, recordings, transcripts, and feedback, is permanently deleted within 14 days. If a School ends its agreement with us, we will permanently delete the associated student data within 14 days of being notified.</p>
+  <p>Students who subscribe directly can delete their own account at any time from within the App. When they do, their personal information, including their account details, recordings, transcripts, and feedback, is permanently deleted within 24 hours.</p>
+  <p>Cancelling a subscription does not delete a student's account. If a student who subscribes directly cancels or allows their subscription to lapse, their account remains so that they can return and subscribe again, and their recordings, transcripts, feedback and learning data continue to be deleted 120 days after each conversation as described above. If they want their account and all associated data removed, they can delete it in the App or contact us at <a href="mailto:help@callcharly.io">help@callcharly.io</a>.</p>
   <p>We retain records of Platform usage for billing and accounting purposes, including the number of students active at each School in each week. These records do not contain student names, email addresses, or conversation content, and once a student's personal information has been deleted the records cannot be linked back to them.</p>
   <p>We may retain anonymised, aggregated data that does not identify any individual for the purpose of improving our services.</p>
 
-  <h2>10. Access, Correction, and Complaints</h2>
+  <h2>11. Access, Correction, and Complaints</h2>
   <p>Individuals, or Schools on their behalf, may request access to or correction of personal information we hold, or request that data be deleted, by contacting us at <a href="mailto:help@callcharly.io">help@callcharly.io</a>. We will respond to access requests within 30 days, action corrections as soon as possible, and action deletion requests within 14 days. We will acknowledge complaints promptly and work to resolve them.</p>
   <p>If you have a privacy concern or complaint, please contact us first at <a href="mailto:help@callcharly.io">help@callcharly.io</a>. If you are not satisfied with our response, you may contact the Office of the Australian Information Commissioner (<a href="https://www.oaic.gov.au" target="_blank" rel="noopener noreferrer">oaic.gov.au</a>).</p>
 
-  <h2>11. Changes to This Policy</h2>
-  <p>We may update this Privacy Policy from time to time. The current version will always be available at <a href="https://callcharly.io/privacy">callcharly.io/privacy</a>. Material changes affecting Schools will be communicated to the School's nominated administrator.</p>
+  <h2>12. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time. The current version will always be available at <a href="https://callcharly.io/privacy">callcharly.io/privacy</a>. Material changes affecting Schools will be communicated to the School's nominated administrator. Material changes affecting students who subscribe directly will be communicated to the email address on their account.</p>
 
-  <h2>12. Contact</h2>
+  <h2>13. Contact</h2>
   <p>For any questions about this Privacy Policy or how we handle personal information, contact:</p>
   <div class="contact-card">
     <p class="name">Charly AI Pty Ltd</p>
     <p><a href="mailto:help@callcharly.io">help@callcharly.io</a></p>
   </div>
 
-  <p class="updated">Last updated: August 2026</p>
+  <p class="updated">Last updated: September 2026</p>
 
 </div>
 </body>
