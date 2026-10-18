@@ -1,0 +1,6 @@
+# Charly — https://www.callcharly.io/
+# Everything is public and crawlable.
+User-agent: *
+Allow: /
+
+Sitemap: https://www.callcharly.io/sitemap.xml
