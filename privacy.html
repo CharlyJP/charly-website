@@ -211,12 +211,14 @@
   <h2>8. Third-Party Service Providers</h2>
   <p>To deliver the Platform, we share limited information with the following third-party providers, who process data on our behalf:</p>
   <ul>
-    <li><strong>ElevenLabs</strong> (voice AI): receives students' speech in real time during a call to enable the conversation, and produces the recording and transcript. United States.</li>
-    <li><strong>Anthropic</strong> (AI feedback generation): receives conversation transcripts to generate feedback reports and progress summaries. United States.</li>
+    <li><strong>ElevenLabs</strong> (voice AI): receives the student's speech in real time during a call to enable the conversation, together with their first name, CEFR level, assigned topics and grammar focus, and the short profile described below, so the conversation can be personalised. ElevenLabs produces the recording and transcript. United States.</li>
+    <li><strong>Anthropic</strong> (AI feedback generation): receives conversation transcripts to generate written feedback and progress summaries, and the student's name and CEFR level when summarising progress across several calls. Anthropic also generates the short profile of recurring points from past conversations that is supplied to ElevenLabs at the start of each call; that profile may include details the student has mentioned, such as their job, interests or where they live. United States.</li>
     <li><strong>Supabase</strong> (database, authentication, and file storage): stores student accounts, recordings, and transcripts. Our instance is hosted in Australia.</li>
     <li><strong>Railway and Vercel</strong> (application hosting): run our backend and web applications. United States.</li>
     <li><strong>Resend</strong> (email delivery): sends account and service-related emails. United States.</li>
     <li><strong>RevenueCat</strong> (subscription management): receives a pseudonymous account identifier and app store purchase information. United States.</li>
+    <li><strong>Google (Firebase Cloud Messaging)</strong> (push notifications): receives the device's notification token and the text of the reminder, which never contains the student's name or any detail from their calls. United States.</li>
+    <li><strong>Sentry</strong> (error monitoring): receives technical diagnostics when something fails on our servers, which can include an email address where an account email could not be delivered. United States.</li>
   </ul>
   <p>These providers are engaged by us to process data only for the purposes of delivering our service, and are subject to security and confidentiality obligations under their agreements with us.</p>
   <p>Where personal information is disclosed to a provider that stores or processes data outside Australia, we rely on contractual commitments in our agreements with those providers requiring them to protect personal information to a standard consistent with the Australian Privacy Principles.</p>
